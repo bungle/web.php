@@ -1,8 +1,8 @@
-# What is web.php?
+![web.php-logo](http://code.google.com/p/web-dot-php/logo)
 
 **web.php** is a zero configuration web development library for PHP > 5.3.
 
-![web.php-logo](http://code.google.com/p/web-dot-php/logo)
+
 
 ## Hello World in web.php
 
