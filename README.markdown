@@ -11,7 +11,7 @@
 
 ## Installation
 
-Download `web.php` (for logging download `log.php`, and for password hashing download `password.php`).
+Download `web.php` (for logging download `log.php`, and for password hashing download `password.php`).  
 (PHP >= 5.3 is required to run web.php)
 
 ### Modify .htaccess
