@@ -263,3 +263,7 @@ one will also be executed if it matches the url. That's why it's common to `die`
 
 If you want to run cleanup code, please try to build your code so that cleanup routines can be registered with
 `register_shutdown_function`.
+
+> I see you are using `goto` inside view class' `__toString`. Isn't that considered harmful?
+
+Feel free to make a fork and change it to while(true) { ... }.
