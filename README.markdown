@@ -31,3 +31,6 @@ If you are using something other than `Apache` with `mod_rewrite`, Google for in
     get('/', function() {
         die('Hello, World!');
     });
+    
+    status('404');
+    die('404 Not Found');
