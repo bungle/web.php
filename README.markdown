@@ -33,3 +33,32 @@ If you are using something other than `Apache` with `mod_rewrite`, Google for in
     });
     status('404');
     die('404 Not Found');
+
+## Routing
+
+`web.php` has support for routing HTTP GET, POST, PUT, and DELETE request.
+
+### GET Routes
+
+Use `get($path, $func)` to route HTTP GET requests.
+
+Routes without parameters (the routes work on sub-directories too):
+
+    get('/', function() {
+        die('Hello, World!');
+    });
+    // or
+    get('/posts', function() {
+        die(json_encode(array(
+            array(
+                'id'    => 1,
+                'title' => 'Trying out web.php',
+                'boby'  => 'Lorem...' 
+            ),
+            array(
+                'id'    => 2,
+                'title' => 'I'm really starting to like web.php',
+                'boby'  => 'Lorem...' 
+            )
+        )));
+    });
