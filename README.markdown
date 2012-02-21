@@ -36,7 +36,7 @@ If you are using something other than `Apache` with `mod_rewrite`, Google for in
 
 ## Routing
 
-`web.php` has support for routing HTTP GET, POST, PUT, and DELETE request.
+`web.php` has support for routing HTTP GET, POST, PUT, and DELETE request. Routes are case-insensitive, and the trailing `/` is omitted.
 
 ### GET Routes
 
