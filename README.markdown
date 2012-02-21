@@ -268,6 +268,13 @@ one will also be executed if it matches the url. That's why it's common to `die`
 If you want to run cleanup code, please try to build your code so that cleanup routines can be registered with
 `register_shutdown_function`.
 
+> web.php doesn't provide object relational mapper (ORM), what do you suggest?
+
+You could try these:
+
+* [RedBeanPHP](http://redbeanphp.com/)
+* [Doctrine](http://www.doctrine-project.org/)
+
 > I see that you are using `goto` inside view class' `__toString`. Isn't `goto` considered harmful?
 
 Feel free to make a fork and change it to `while(true) { ... }` or `do { ... } while (true);` or `for(;;) { ... }`.
