@@ -274,7 +274,6 @@ Blocks are a method to move particular block of 'text' from views to a particula
         </body>
     </html>
 
-
 ### Partials
 
 TBD
@@ -288,23 +287,11 @@ TBD (see: [Facebook's BigPipe](https://www.facebook.com/note.php?note_id=3894140
 TBD
 
 ## Other Features
-
-### Sending Files with XSendfile Support
-
-TBD
-
+### Sending Files
+#### XSendfile Support
 ### Logging with `log.php`
-
-TBD
-
 #### Logging with ChromePHP
-
-TBD
-
 #### Extending the Logger
-
-TBD
-
 ### Password Hashing & Checking with `password.php`
 
 TBD
