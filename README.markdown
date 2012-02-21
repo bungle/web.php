@@ -67,4 +67,19 @@ Use `get($path, $func)` to route HTTP GET requests.
 
 Route parameters in `web.php` are parsed with `sscanf` and `vsprintf`, but we have added extra parameter `%p` which acts
 the same as `%[^/]` (everything until / except `/`). Please read the documentation for the format from
-[sprintf](http://www.php.net/manual/function.sprintf.php) documentation. 
+[sprintf](http://www.php.net/manual/function.sprintf.php)'s documentation.
+
+    get('/posts/%d', function($id) {
+        switch ($id) {
+            case 1: die(json_encode(array(
+                    'id'    => 1,
+                    'title' => 'Trying out web.php',
+                    'body'  => 'Lorem...' 
+                )));
+            case 2: die(json_encode(array(
+                    'id'    => 2,
+                    'title' => 'I'm really starting to like web.php',
+                    'body'  => 'Lorem...' 
+                )));
+        }
+    }
