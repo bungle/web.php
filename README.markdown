@@ -100,6 +100,41 @@ Use `put($path, $func)` to route HTTP PUT requests. See the *GET Routes* example
 
 Use `delete($path, $func)` to route HTTP DELETE requests. See the *GET Routes* examples.
 
+## Forwards and Redirects
+
+### Forwards
+
+Use `forward($name, $func)` to register a named forward. Call a named forward with `forward($name)`.
+Forwards need to be registered before using them.
+
+    <?php
+    forward('index', function() {
+        die('Index Page');
+    });
+    
+    get('/', function() {
+        forward('index')
+    });
+    
+    get('/another-url', function() {
+        forward('index')
+    });
+
+### Redirects
+
+Use `redirect($url, $code = 301, $die = true)` to redirect the user in other page.
+   
+    <?php
+    session_start();
+    get('/', function() {
+        die(isset($_SESSION['redirected]) ? 'Redirected' : 'Welcome!');
+    });
+
+    post('/', function() {
+        flash('redirected', true);
+        redirect('~/');
+    });
+
 ## Views, Layouts, Blocks, Partials, and Pagelets
 
 `web.php` has support for views, and layouts (or even sub-layouts).
