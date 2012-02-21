@@ -2,9 +2,7 @@
 
 **web.php** is a zero configuration web development library for PHP > 5.3.
 
-
-
-## Hello World in web.php
+# Hello World in web.php
 
     <?php
     include 'web.php';
@@ -12,11 +10,11 @@
         die('Hello, World!');
     });
 
-## Installation
+# Installation
 
 Download `web.php` (for logging download `log.php`, and for password hashing download `password.php`).
 
-### Modify .htaccess
+## Modify .htaccess
 
     <IfModule mod_rewrite.c>
         RewriteCond %{REQUEST_FILENAME} !-f
@@ -26,7 +24,7 @@ Download `web.php` (for logging download `log.php`, and for password hashing dow
 
 If you are using something other than `Apache` with `mod_rewrite`, Google for instructions.
 
-### Create `index.php` Bootstrap File
+## Create `index.php` Bootstrap File
 
     <?php
     include 'web.php';
@@ -36,15 +34,15 @@ If you are using something other than `Apache` with `mod_rewrite`, Google for in
     status('404');
     die('404 Not Found');
 
-## Routing
+# Routing
 
 `web.php` has support for routing HTTP GET, POST, PUT, and DELETE request. Routes are case-insensitive, and the trailing `/` is omitted.
 
-### GET Routes
+## GET Routes
 
 Use `get($path, $func)` to route HTTP GET requests.
 
-#### Routes without Parameters (the Routes Work on Sub-Directories too):
+### Routes without Parameters (the Routes Work on Sub-Directories too):
 
     <?php
     get('/', function() {
@@ -69,7 +67,7 @@ or:
         )));
     });
 
-#### Parameterized Routes
+### Parameterized Routes
 
 Route parameters in `web.php` are parsed with `sscanf` and `vsprintf`, but we have added extra parameter `%p` which acts
 the same as `%[^/]` (everything until or except `/`). Please read the documentation for the format from
@@ -91,23 +89,23 @@ the same as `%[^/]` (everything until or except `/`). Please read the documentat
         }
     }
 
-### POST Routes
+## POST Routes
 
 Use `post($path, $func)` to route HTTP POST requests. See the *GET Routes* examples.
 
-### PUT Routes
+## PUT Routes
 
 Use `put($path, $func)` to route HTTP PUT requests. See the *GET Routes* examples.
 
-### DELETE Routes
+## DELETE Routes
 
 Use `delete($path, $func)` to route HTTP DELETE requests. See the *GET Routes* examples.
 
-## Views, Layouts, Blocks, Partials, and Pagelets
+# Views, Layouts, Blocks, Partials, and Pagelets
 
 `web.php` has support for views, and layouts (or even sub-layouts).
 
-### Views
+## Views
 
     <?php
     get('/', function() {
@@ -119,7 +117,7 @@ view.php:
     <!DOCTYPE html>
     Hello World
 
-### Views with Parameters
+## Views with Parameters
 
     <?php
     get('/%s', function($text) {
@@ -133,7 +131,7 @@ view.php:
     <!DOCTYPE html>
     Hello, <?= $text ?>!
 
-### Global View Variables
+## Global View Variables
 
 You can define global view variables that all the views will get with the following code:
 
@@ -143,7 +141,7 @@ You can define global view variables that all the views will get with the follow
 Note: If local view variables are defined with same name as global variables, local variables overwrite the global ones.
 The globals are still accessible from `view::$globals`.
 
-### Layouts
+## Layouts
 
 You can define the layout by setting the `layout` variable in a view, you can do it like this:
 
@@ -168,7 +166,7 @@ layout.php:
 
 Note: All the view variables are also accessible from layouts.
 
-#### Nested Layouts
+### Nested Layouts
 
 view.php:
 
@@ -191,7 +189,7 @@ master.php:
         </body>
     </html>
    
-### Blocks
+## Blocks
 
 Blocks are a method to move particular block of 'text' from views to a particular location in layouts.
 
@@ -239,19 +237,19 @@ layout.php:
     </html>
 
 
-### Partials
+## Partials
 
 TBD
 
-### Pagelets
+## Pagelets
 
 TBD (see: [Facebook's BigPipe](https://www.facebook.com/note.php?note_id=389414033919)).
 
-## Forms, and Filters
+# Forms, and Filters
 
 TBD
     
-## FAQ
+# FAQ
 
 > Is routing to anonymous function the only option?
 
