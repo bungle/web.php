@@ -83,3 +83,15 @@ the same as `%[^/]` (everything until or except `/`). Please read the documentat
                 )));
         }
     }
+
+### POST Routes
+
+Use `post($path, $func)` to route HTTP POST requests. See the *GET Routes* examples.
+
+### PUT Routes
+
+Use `put($path, $func)` to route HTTP PUT requests. See the *GET Routes* examples.
+
+### DELETE Routes
+
+Use `delete($path, $func)` to route HTTP DELETE requests. See the *GET Routes* examples.
