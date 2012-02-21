@@ -53,12 +53,17 @@ Routes without parameters (the routes work on sub-directories too):
             array(
                 'id'    => 1,
                 'title' => 'Trying out web.php',
-                'boby'  => 'Lorem...' 
+                'body'  => 'Lorem...' 
             ),
             array(
                 'id'    => 2,
                 'title' => 'I'm really starting to like web.php',
-                'boby'  => 'Lorem...' 
+                'body'  => 'Lorem...' 
             )
         )));
     });
+
+Routes with parameters
+
+Route parameters in `web.php` are parsed with `sscanf` and `vsprintf`, but we have added extra parameter `%p` which acts
+the same as `%[^/]` (everything until / except `/`). Please read the documentation of `[sprintf](http://www.php.net/manual/function.sprintf.php)` 
