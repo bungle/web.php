@@ -293,9 +293,9 @@ TBD
 
 You can actually route to `files`, `functions`, `static class methods`, and `object instance methods`:
 
-    get('/%d', 'router.php'); // look for $args[0] inside router.php
-    get('/%p', 'die');
-    get('/', 'Clazz::staticMethod');
+    get('/%d', 'router.php');          // Look for $args[0] inside router.php
+    get('/%p', 'die');                 // URL: /hello will output 'hello' with PHP's built-in function 'die'
+    get('/', 'Clazz::staticMethod');   // Executes a static method
     get('/', 'Clazz->instanceMethod'); // Instantiates new object from class 'Clazz' using parameterless constructor
 
 #### Why are you using 'die' inside controllers? How can I execute code after executing route, i.e. cleanup resources?
