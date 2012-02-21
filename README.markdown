@@ -163,6 +163,32 @@ layout.php:
         <body><?= $view ?></body>
     </html>
 
+Note: All the view variables are also accessible from layouts.
+
+#### Nested Layouts
+
+view.php:
+
+    <?php $layout = 'section.php' ?>
+    <p>Hello World</p>
+
+section.php:
+
+    <?php $layout = 'master.php' ?>
+    <div id="main-section">
+        <?= $view ?>
+    </div>
+
+master.php:
+
+    <!DOCTYPE html>
+    <html>
+        <body>
+            <?= $view ?>
+        </body>
+    </html>
+   
+
 ### Blocks
 
 TBD
