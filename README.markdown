@@ -66,7 +66,7 @@ Use `get($path, $func)` to route HTTP GET requests.
 #### Parameterized routes
 
 Route parameters in `web.php` are parsed with `sscanf` and `vsprintf`, but we have added extra parameter `%p` which acts
-the same as `%[^/]` (everything until / except `/`). Please read the documentation for the format from
+the same as `%[^/]` (everything until or except `/`). Please read the documentation for the format from
 [sprintf's](http://www.php.net/manual/function.sprintf.php) documentation.
 
     get('/posts/%d', function($id) {
