@@ -97,3 +97,14 @@ Use `put($path, $func)` to route HTTP PUT requests. See the *GET Routes* example
 ### DELETE Routes
 
 Use `delete($path, $func)` to route HTTP DELETE requests. See the *GET Routes* examples.
+
+## FAQ
+
+> Is routing to anonymous function the only option?
+
+No you can route to `files`, `functions`, `static class methods`, and `object instance methods`:
+
+    get('/', 'router.php');
+    get('/%p', 'die');
+    get('/', 'Clazz::staticMethod');
+    get('/', 'Clazz->instanceMethod'); // Instantiates new object from class 'Clazz' using parameterless constructor
