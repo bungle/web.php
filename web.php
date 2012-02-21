@@ -333,19 +333,6 @@ function specialchars($quote = ENT_NOQUOTES, $charset = 'UTF-8', $double = true)
         return htmlspecialchars($value, $quote, $charset, $double);
     };
 }
-function titlewrap($str, $width = 75, $break = '...') {
-    $title = explode("\n", wordwrap(strip_tags($str), $width, "\n", true), 2);
-    $title = $title[0];
-    if (mb_strlen($title, 'UTF-8') < mb_strlen($str, 'UTF-8')) $title = rtrim($title, '.,-:; ') . $break;
-    return $title;
-}
-function descwrap($str, $width = 154) {
-    $desc = explode("\n", wordwrap(strip_tags($str), $width, "\n", true), 2);
-    $desc = $desc[0];
-    $desc = iconv_substr($desc, 0, iconv_strrpos($desc, '.'));
-    if (mb_strlen($desc, 'UTF-8') > 0) return "{$desc}.";
-    return titlewrap($str, $width);
-}
 function slug($str, $delimiter = '-', $width = null) {
     if ($width != null) $str = titlewrap($str, $width, '');
     $str = iconv('UTF-8', 'ASCII//TRANSLIT', $str);
