@@ -139,6 +139,7 @@ You can define global view variables that all the views will get with the follow
     view::$globals->title = 'web.php rocks!';
 
 Note: If local view variables are defined with same name as global variables, local variables overwrite the global ones.
+The globals are still accessible from view::$globals.
 
 ### Layouts
 
