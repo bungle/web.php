@@ -44,12 +44,14 @@ Use `get($path, $func)` to route HTTP GET requests.
 
 #### Routes without Parameters (the Routes Work on Sub-Directories too):
 
+    <?php
     get('/', function() {
         die('Hello, World!');
     });
 
 or:
 
+    <?php
     get('/posts', function() {
         die(json_encode(array(
             array(
@@ -71,6 +73,7 @@ Route parameters in `web.php` are parsed with `sscanf` and `vsprintf`, but we ha
 the same as `%[^/]` (everything until or except `/`). Please read the documentation for the format from
 [sprintf's](http://www.php.net/manual/function.sprintf.php) documentation.
 
+    <?php
     get('/posts/%d', function($id) {
         switch ($id) {
             case 1: die(json_encode(array(
@@ -104,6 +107,7 @@ Use `delete($path, $func)` to route HTTP DELETE requests. See the *GET Routes* e
 
 ### Views
 
+    <?php
     get('/', function() {
         die(new view('example.php'));
     });
@@ -115,9 +119,10 @@ example.php:
 
 ### Views with Parameters
 
-    get('/%s', function($something) {
+    <?php
+    get('/%s', function($text) {
         $view = new view('example-2.php');
-        $view->text = htmlspecialchars($something);
+        $view->text = htmlspecialchars($text);
         die($view);
     });
 
@@ -125,6 +130,19 @@ example-2.php:
 
     <!DOCTYPE html>
     Hello, <?= $text ?>!
+
+### Global View Variables
+
+You can define global view variables that all the views will get with the following code:
+
+    <?php
+    view::$globals->title = 'web.php rocks!';
+
+Note: If local view variables are defined with same name as global variables, local variables overwrite the global ones.
+
+### Layouts
+
+You can define the layout
 
 ## FAQ
 
