@@ -266,4 +266,4 @@ If you want to run cleanup code, please try to build your code so that cleanup r
 
 > I see you are using `goto` inside view class' `__toString`. Isn't that considered harmful?
 
-Feel free to make a fork and change it to while(true) { ... }.
+Feel free to make a fork and change it to `while(true) { ... }`.
