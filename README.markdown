@@ -195,7 +195,10 @@ Blocks are a method to move particular block of 'text' from views to a particula
 
 view.php:
 
-    <? $layout = 'layout.php'; ?>
+    <?php
+    $layout = 'layout.php';
+    $title  = 'Blocks - web.php';
+    ?>
     <?php block($head); ?>
         <meta name="description" content"web.php has blocks too!">
     <?php block(); ?>
@@ -216,6 +219,7 @@ layout.php:
     <html>
         <?php if (isset($head)): ?>
         <head>
+            <title><?= isset($title) ? $title : 'Default Title' ?></title>
             <?= $head ?>
         </head>
         <?php endif; ?>
