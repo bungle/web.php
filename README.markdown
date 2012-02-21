@@ -48,7 +48,7 @@ Use `get($path, $func)` to route HTTP GET requests.
         die('Hello, World!');
     });
 
-Or:
+or:
 
     get('/posts', function() {
         die(json_encode(array(
