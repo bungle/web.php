@@ -1,4 +1,4 @@
-![web.php-logo](http://code.google.com/p/web-dot-php/logo
+![web.php-logo](http://code.google.com/p/web-dot-php/logo)
 
 # What is web.php?
 
