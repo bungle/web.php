@@ -155,7 +155,7 @@ Use `redirect($url, $code = 301, $die = true)` to redirect the user in other pag
     <!DOCTYPE html>
     Hello World
 
-## Views with Parameters
+#### Views with Properties
 
     <?php
     get('/%s', function($text) {
@@ -169,7 +169,7 @@ Use `redirect($url, $code = 301, $die = true)` to redirect the user in other pag
     <!DOCTYPE html>
     Hello, <?= $text ?>!
 
-### Global View Variables
+#### Global View Variables
 
 You can define global view variables that all the views will get with the following code:
 
