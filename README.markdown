@@ -336,6 +336,15 @@ You could try these:
 * [RedBeanPHP](http://redbeanphp.com/)
 * [Doctrine](http://www.doctrine-project.org/)
 
+#### PHP Sucks! Where to go next?
+
+Try these:
+
+* Perl: [Mojolicious](http://mojolicio.us/)
+* Ruby: [Sinatra](http://www.sinatrarb.com/)
+* Python: [web.py](http://webpy.org/)
+* Javascript: [Node.js](http://nodejs.org/)
+
 #### I see that you are using `goto` inside view class' `__toString`. Isn't `goto` considered harmful?
 
 Feel free to make a fork and change it to `while(true) { ... }` or `do { ... } while (true);` or `for(;;) { ... }`.
