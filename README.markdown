@@ -109,10 +109,10 @@ Use `delete($path, $func)` to route HTTP DELETE requests. See the *GET Routes* e
 
     <?php
     get('/', function() {
-        die(new view('example.php'));
+        die(new view('view.php'));
     });
 
-example.php:
+view.php:
 
     <!DOCTYPE html>
     Hello World
@@ -121,12 +121,12 @@ example.php:
 
     <?php
     get('/%s', function($text) {
-        $view = new view('example-2.php');
+        $view = new view('view.php');
         $view->text = htmlspecialchars($text);
         die($view);
     });
 
-example-2.php:
+view.php:
 
     <!DOCTYPE html>
     Hello, <?= $text ?>!
@@ -142,8 +142,27 @@ Note: If local view variables are defined with same name as global variables, lo
 
 ### Layouts
 
-You can define the layout
+You can define the layout by setting the `layout` variable in a view, you can do it like this:
 
+    <?php
+    view::$globals->layout = 'layout.php'; // or
+    $view = new view('view.php', 'layout.php'); // or
+    $view = new view('view.php');
+    $view->layout = 'layout.php'; // or
+    $view = new view('view.php');
+
+view.php:
+
+    <?php $layout = 'layout.php'; ?>
+    Hello, World!
+
+layout.php:
+
+    <!DOCTYPE html>
+    <html>
+        <body><?= $view ?></body>
+    </html>
+    
 ## FAQ
 
 > Is routing to anonymous function the only option?
