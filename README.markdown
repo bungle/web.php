@@ -321,6 +321,11 @@ You could try these:
 * [RedBeanPHP](http://redbeanphp.com/)
 * [Doctrine](http://www.doctrine-project.org/)
 
+You could also try our NoSQL DB's like:
+
+* [Redis](http://redis.io/)
+* [MongoDB](http://www.mongodb.org/)
+
 #### PHP Sucks! Where to go next?
 
 Try these:
