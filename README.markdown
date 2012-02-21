@@ -101,7 +101,7 @@ Use `put($path, $func)` to route HTTP PUT requests. See the *GET Routes* example
 
 Use `delete($path, $func)` to route HTTP DELETE requests. See the *GET Routes* examples.
 
-## Views, and Layouts
+## Views, Layouts, Blocks, Partials, and Pagelets
 
 `web.php` has support for views, and layouts (or even sub-layouts).
 
@@ -162,6 +162,22 @@ layout.php:
     <html>
         <body><?= $view ?></body>
     </html>
+
+### Blocks
+
+TBD
+
+### Partials
+
+TBD
+
+### Pagelets
+
+TBD (see: [Facebook's BigPipe](https://www.facebook.com/note.php?note_id=389414033919).
+
+## Forms, and Filters
+
+TBD
     
 ## FAQ
 
