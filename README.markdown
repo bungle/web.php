@@ -111,7 +111,7 @@ Use `delete($path, $func)` to route HTTP DELETE requests. See the *GET Routes* e
         die(new view('view.php'));
     });
 
-*view.php*:
+*view.php:*
 
     <!DOCTYPE html>
     Hello World
@@ -125,7 +125,7 @@ Use `delete($path, $func)` to route HTTP DELETE requests. See the *GET Routes* e
         die($view);
     });
 
-view.php:
+*view.php:*
 
     <!DOCTYPE html>
     Hello, <?= $text ?>!
@@ -151,12 +151,12 @@ You can define the layout by setting the `layout` variable in a view, you can do
     $view->layout = 'layout.php';               // or
     $view = new view('view.php');
 
-view.php:
+*view.php:*
 
     <?php $layout = 'layout.php'; ?>
     Hello, World!
 
-layout.php:
+*layout.php:*
 
     <!DOCTYPE html>
     <html>
@@ -167,19 +167,19 @@ Note: All the view variables are also accessible from layouts.
 
 #### Nested Layouts
 
-view.php:
+*view.php:*
 
     <?php $layout = 'section.php' ?>
     <p>Hello World</p>
 
-section.php:
+*section.php:*
 
     <?php $layout = 'master.php' ?>
     <div id="main-section">
         <?= $view ?>
     </div>
 
-master.php:
+*master.php:*
 
     <!DOCTYPE html>
     <html>
@@ -192,7 +192,7 @@ master.php:
 
 Blocks are a method to move particular block of 'text' from views to a particular location in layouts.
 
-view.php:
+*view.php:*
 
     <?php
     $layout = 'layout.php';
@@ -212,7 +212,7 @@ view.php:
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
     <?php block(); ?>
 
-layout.php:
+*layout.php:*
 
     <!DOCTYPE html>
     <html>
