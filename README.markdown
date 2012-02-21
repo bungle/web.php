@@ -250,7 +250,7 @@ TBD
 
 You can actually route to `files`, `functions`, `static class methods`, and `object instance methods`:
 
-    get('/', 'router.php');
+    get('/%d', 'router.php'); // look for $args[0] inside router.php
     get('/%p', 'die');
     get('/', 'Clazz::staticMethod');
     get('/', 'Clazz->instanceMethod'); // Instantiates new object from class 'Clazz' using parameterless constructor
