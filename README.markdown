@@ -102,7 +102,7 @@ Use `delete($path, $func)` to route HTTP DELETE requests. See the *GET Routes* e
 
 > Is routing to anonymous function the only option?
 
-No you can route to `files`, `functions`, `static class methods`, and `object instance methods`:
+You can actually route to `files`, `functions`, `static class methods`, and `object instance methods`:
 
     get('/', 'router.php');
     get('/%p', 'die');
