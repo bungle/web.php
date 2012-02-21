@@ -1,6 +1,6 @@
 # What is web.php?
 
-**web.php** is a simple and minimalistic front controller based model-view-controller implementation for PHP > 5.3.
+**web.php** is a zero configuration web development library for PHP > 5.3.
 
 ## Hello World in web.php
 
