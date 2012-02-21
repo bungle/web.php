@@ -227,7 +227,7 @@ layout.php:
                 <?= $aside ?>
             </aside>
             <?php endif; ?>
-            <?php if (isset($scripts)) echo $scripts; ?>
+            <?= isset($scripts) ? $scripts : ''; ?>
         </body>
     </html>
 
