@@ -272,7 +272,7 @@ If you want to run cleanup code, please try to build your code so that cleanup r
 
 Feel free to make a fork and change it to `while(true) { ... }`.
 
-## Licence
+## License
 
 web.php is distributed with MIT License.
 
