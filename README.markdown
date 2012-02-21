@@ -145,10 +145,10 @@ Note: If local view variables are defined with same name as global variables, lo
 You can define the layout by setting the `layout` variable in a view, you can do it like this:
 
     <?php
-    view::$globals->layout = 'layout.php'; // or
+    view::$globals->layout = 'layout.php';      // or
     $view = new view('view.php', 'layout.php'); // or
     $view = new view('view.php');
-    $view->layout = 'layout.php'; // or
+    $view->layout = 'layout.php';               // or
     $view = new view('view.php');
 
 view.php:
