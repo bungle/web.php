@@ -108,3 +108,12 @@ No you can route to `files`, `functions`, `static class methods`, and `object in
     get('/%p', 'die');
     get('/', 'Clazz::staticMethod');
     get('/', 'Clazz->instanceMethod'); // Instantiates new object from class 'Clazz' using parameterless constructor
+
+> Why are you using 'die' inside controllers? How can I execute code after executing route, i.e. cleanup resources?
+
+This design decision is probably something that people may or may not agree. We think that it is user's responsibility to
+manage the execution. You don't have to `die`, but keep in mind that any other route that is executed after the matching
+one will also be executed if it matches the url. That's why it's common to `die` with web.php.
+
+If you want to run cleanup code, please try to build your code so that cleanup routines can be registered with
+`register_shutdown_function`.
