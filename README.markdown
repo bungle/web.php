@@ -1,3 +1,5 @@
+![web.php-logo](http://code.google.com/p/web-dot-php/logo)
+
 # What is web.php?
 
 **web.php** is a zero configuration web development library for PHP > 5.3.
@@ -272,5 +274,3 @@ If you want to run cleanup code, please try to build your code so that cleanup r
 > I see that you are using `goto` inside view class' `__toString`. Isn't `goto` considered harmful?
 
 Feel free to make a fork and change it to `while(true) { ... }`.
-
-![web.php-logo](http://code.google.com/p/web-dot-php/logo)
