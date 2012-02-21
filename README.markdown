@@ -111,7 +111,7 @@ Use `delete($path, $func)` to route HTTP DELETE requests. See the *GET Routes* e
         die(new view('view.php'));
     });
 
-`view.php`:
+*view.php*:
 
     <!DOCTYPE html>
     Hello World
