@@ -66,4 +66,5 @@ Routes without parameters (the routes work on sub-directories too):
 Routes with parameters
 
 Route parameters in `web.php` are parsed with `sscanf` and `vsprintf`, but we have added extra parameter `%p` which acts
-the same as `%[^/]` (everything until / except `/`). Please read the documentation of `[sprintf](http://www.php.net/manual/function.sprintf.php)` 
+the same as `%[^/]` (everything until / except `/`). Please read the documentation for the format from
+[sprintf](http://www.php.net/manual/function.sprintf.php) documentation. 
