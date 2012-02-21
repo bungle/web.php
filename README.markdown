@@ -24,7 +24,7 @@ Download `web.php` (for logging download `log.php`, and for password hashing dow
 
 If you are using something other than `Apache` with `mod_rewrite`, Google for instructions.
 
-### Create `index.php` bootstrap file
+### Create `index.php` Bootstrap File
 
     <?php
     include 'web.php';
@@ -42,7 +42,7 @@ If you are using something other than `Apache` with `mod_rewrite`, Google for in
 
 Use `get($path, $func)` to route HTTP GET requests.
 
-#### Routes without parameters (the routes work on sub-directories too):
+#### Routes without Parameters (the Routes Work on Sub-Directories too):
 
     get('/', function() {
         die('Hello, World!');
@@ -65,7 +65,7 @@ or:
         )));
     });
 
-#### Parameterized routes
+#### Parameterized Routes
 
 Route parameters in `web.php` are parsed with `sscanf` and `vsprintf`, but we have added extra parameter `%p` which acts
 the same as `%[^/]` (everything until or except `/`). Please read the documentation for the format from
@@ -97,6 +97,34 @@ Use `put($path, $func)` to route HTTP PUT requests. See the *GET Routes* example
 ### DELETE Routes
 
 Use `delete($path, $func)` to route HTTP DELETE requests. See the *GET Routes* examples.
+
+## Views, and Layouts
+
+`web.php` has support for views, and layouts (or even sub-layouts).
+
+### Views
+
+    get('/', function() {
+        die(new view('example.php'));
+    });
+
+example.php:
+
+    <!DOCTYPE html>
+    Hello World
+
+### Views with Parameters
+
+    get('/%s', function($something) {
+        $view = new view('example-2.php');
+        $view->text = htmlspecialchars($something);
+        die($view);
+    });
+
+example-2.php:
+
+    <!DOCTYPE html>
+    Hello, <?= $text ?>!
 
 ## FAQ
 
