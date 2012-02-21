@@ -286,7 +286,29 @@ TBD (see: [Facebook's BigPipe](https://www.facebook.com/note.php?note_id=3894140
 ## Forms, and Filters
 
 TBD
-    
+
+## Other Features
+
+### Sending Files with XSendfile Support
+
+TBD
+
+### Logging with `log.php`
+
+TBD
+
+#### Logging with ChromePHP
+
+TBD
+
+#### Extending the Logger
+
+TBD
+
+### Password Hashing & Checking with `password.php`
+
+TBD
+
 ## FAQ
 
 #### Is routing to anonymous function the only option?
