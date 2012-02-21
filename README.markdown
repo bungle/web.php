@@ -294,8 +294,6 @@ TBD
 #### Extending the Logger
 ### Password Hashing & Checking with `password.php`
 
-TBD
-
 ## FAQ
 
 #### Is routing to anonymous function the only option?
