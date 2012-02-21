@@ -42,7 +42,7 @@ If you are using something other than `Apache` with `mod_rewrite`, Google for in
 
 Use `get($path, $func)` to route HTTP GET requests.
 
-Routes without parameters (the routes work on sub-directories too):
+#### Routes without parameters (the routes work on sub-directories too):
 
     get('/', function() {
         die('Hello, World!');
@@ -63,7 +63,7 @@ Routes without parameters (the routes work on sub-directories too):
         )));
     });
 
-Routes with parameters
+#### Routes with parameters
 
 Route parameters in `web.php` are parsed with `sscanf` and `vsprintf`, but we have added extra parameter `%p` which acts
 the same as `%[^/]` (everything until / except `/`). Please read the documentation for the format from
