@@ -99,7 +99,7 @@ Use `put($path, $func)` to route HTTP PUT requests. See the *GET Routes* example
 
 Use `delete($path, $func)` to route HTTP DELETE requests. See the *GET Routes* examples.
 
-### All Routes
+### Routing All Types of Requests
 
 Use `route($path, $func)` to route all HTTP requests. See the *GET Routes* examples.
 
