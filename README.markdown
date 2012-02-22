@@ -255,12 +255,10 @@ Blocks are a method to move particular block of 'text' from views to a particula
 
     <!DOCTYPE html>
     <html>
-        <?php if (isset($head)): ?>
         <head>
             <title><?= isset($title) ? $title : 'Default Title' ?></title>
-            <?= $head ?>
+            <?= isset($head) ? $head : '' ?>
         </head>
-        <?php endif; ?>
         <body>
             <article>
                 <?= $view ?>
@@ -270,7 +268,7 @@ Blocks are a method to move particular block of 'text' from views to a particula
                 <?= $aside ?>
             </aside>
             <?php endif; ?>
-            <?= isset($scripts) ? $scripts : ''; ?>
+            <?= isset($scripts) ? $scripts : '' ?>
         </body>
     </html>
 
