@@ -314,17 +314,17 @@ But that is not all, web.php comes with these functions to aid in validation:
 * `choice()`
 
     <?php
-    $email = 'john@doe.net';
+    $email = 'john\@doe.net';
     echo filter(
         $email,
         'email',
-        choice('john@doe.net', 'john@doe.com')
+        choice('john\@doe.net', 'john\@doe.com')
     ) ? 'Valid Email' : 'Invalid Email';  // Outputs Valid Email
-    $email = 'john@doe.org';
+    $email = 'john\@doe.org';
     echo filter(
         $email,
         'email',
-        choice('john@doe.net', 'john@doe.com')
+        choice('john\@doe.net', 'john\@doe.com')
     ) ? 'Valid Email' : 'Invalid Email';  // Outputs Invalid Email
 
 
