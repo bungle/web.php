@@ -412,6 +412,11 @@ one will also be executed if it matches the url. That's why it's common to `die`
 If you want to run cleanup code, please try to build your code so that cleanup routines can be registered with
 `register_shutdown_function`.
 
+#### How fast web.php is?
+
+It depends on what you compare it to. But if you compare it to other PHP frameworks, web.php will surely stand the
+competition. If believe that web.php could be made even faster, please let us know!
+
 #### web.php doesn't provide object relational mapper (ORM), what do you suggest?
 
 You could try these:
