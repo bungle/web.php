@@ -321,7 +321,7 @@ Example:
         $email,
         'email',
         choice('john@doe.net', 'john@doe.com')
-    ) ? 'Valid Email' : 'Invalid Email';                                     // Outputs 'Valid Email'
+    ) ? 'Valid Email' : 'Invalid Email'; // Outputs 'Valid Email'
     
     $age_o = '16';
     $age_f = filter(
