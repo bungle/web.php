@@ -328,9 +328,9 @@ Example:
         $age_o,
         'int',
         'intval',
-        between(12, 24)
+        not(between(0, 18))
     );
-    echo $age_f !== false ? "Valid Age: {$age_f}" : 'Invalid Age {$age_o}'; // Outputs 'Valid Age: 16'
+    echo $age_f !== false ? "Valid Age: {$age_f}" : 'Under-aged: {$age_o}'; // Outputs 'Under-aged: 16'
 
 Note: you can use multiple filters with single filter call.
 
