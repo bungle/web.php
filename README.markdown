@@ -334,6 +334,41 @@ Example:
 
 Note: you can use multiple filters with single filter call.
 
+#### User Defined Filters and Validators
+
+Filters can either modify the `$value` or validate the `$value`. If validation filter fails, the filter function will
+return false immediately.
+
+The most simple modifying filter:
+
+    <?php
+    function world_filter($value) {
+        return "{$value} World!";
+    }
+    // Usage:
+    $text = 'Hello';
+    echo filter('Hello', 'world_filter');               // Outputs 'Hello World!'
+    // or
+    echo filter('Hello', 'world_filter', 'strtoupper'); // Outputs 'HELLO WORLD!'
+
+The most simple validating filters:
+
+    <?php
+    function true_valitator($value) {
+        return true;
+    }
+    function false_valitator($value) {
+        return false;
+    }    
+    $valid = filter('Hello', 'true_validator');                    // $valid holds true
+    $valid = filter('Hello', 'true_validator', 'false_validator'); // $valid holds false
+
+You can also mix modifying filters and validating filters:
+
+    <?php
+    $newvalue = filter('1', 'int', 'intval'); // $newvalue holds (int) 1
+    $newvalue = filter('A', 'int', 'intval'); // $newvalue holds false
+
 ## Other Features
 ### Sending Files
 #### X-Sendfile Support
