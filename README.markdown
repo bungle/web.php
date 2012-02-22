@@ -289,7 +289,7 @@ Use `filter()` to filter a variable:
     $email = 'root@sunet.se';
     echo filter($email, 'email') ? 'Valid Email' : 'Invalid Email';
 
-#### Predefined Filters and Validators
+#### Built-in Filters and Validators
 
 web.php has these built-in validators available that come with PHP's [Filter Funtions](http://www.php.net/manual/ref.filter.php):
 
@@ -298,8 +298,8 @@ web.php has these built-in validators available that come with PHP's [Filter Fun
 In addition to that you can validate using regular expressions:
 
     <?php
-    $email = 'root@sunet.se';
-    echo filter($email, '/^.+@.+$/') ? 'Valid Email' : 'Invalid Email';
+    $email = 'john@doe.net';
+    echo filter($email, '/^.+@.+$/') ? 'Valid Email' : 'Invalid Email'; // Outputs 'Valid Email'
 
 But that is not all, web.php comes with these functions to aid in validation:
 
@@ -312,6 +312,12 @@ But that is not all, web.php comes with these functions to aid in validation:
 * `minvalue($min)`
 * `maxvalue($max)`
 * `choice()`
+
+    <?php
+    $email = 'john@doe.net';
+    echo filter($email, 'email', choice('john@doe.net', 'john@doe.com')) ? 'Valid Email' : 'Invalid Email';  // Outputs 'Valid Email'
+    $email = 'john@doe.org';
+    echo filter($email, 'email', choice('john@doe.net', 'john@doe.com')) ? 'Valid Email' : 'Invalid Email';  // Outputs 'Invalid Email'
 
 ## Other Features
 ### Sending Files
