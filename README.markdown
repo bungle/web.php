@@ -188,7 +188,7 @@ You can define the layout by setting the `layout` variable in a view, you can do
     $view = new view('view.php', 'layout.php'); // or
     $view = new view('view.php');
     $view->layout = 'layout.php';               // or
-    $view = new view('view.php');
+    $view = new view('view.php');               // see 'view.php'
 
 *view.php:*
 
