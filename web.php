@@ -47,11 +47,6 @@ function forward($name, $func = null) {
     if (isset($routes[$name])) return call($routes[$name]);
     trigger_error(sprintf('Invalid forward: %s', $name), E_USER_WARNING);
 }
-function debug($value, $before = '<pre>',  $after = '</pre>') {
-    while (ob_get_level() > 0) @ob_end_clean();
-    if (is_array($value) || is_object($value)) $value = print_r($value, true);
-    return $before . $value . $after;
-}
 function status($code) {
     switch ($code) {
         // Informational
