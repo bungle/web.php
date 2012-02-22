@@ -301,6 +301,18 @@ In addition to that you can validate using regular expressions:
     $email = 'root@sunet.se';
     echo filter($email, '/^.+@.+$/') ? 'Valid Email' : 'Invalid Email';
 
+But that is not all, web.php comes with these functions to aid in validation:
+
+* `not($filter)`
+* `equal($exact, $strict = true)`
+* `length($min, $max = null, $charset = 'UTF-8')`
+* `minlength($min, $charset = 'UTF-8')`
+* `maxlength($max, $charset = 'UTF-8')`
+* `between($min, $max)`
+* `minvalue($min)`
+* `maxvalue($max)`
+* `choice()`
+
 ## Other Features
 ### Sending Files
 #### X-Sendfile Support
