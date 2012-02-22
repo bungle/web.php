@@ -321,13 +321,16 @@ Example:
         $email,
         'email',
         choice('john@doe.net', 'john@doe.com')
-    ) ? 'Valid Email' : 'Invalid Email';  // Outputs 'Valid Email'
-    $email = 'john@doe.org';
-    echo filter(
-        $email,
-        'email',
-        choice('john@doe.net', 'john\@doe.com')
-    ) ? 'Valid Email' : 'Invalid Email';  // Outputs 'Invalid Email'
+    ) ? 'Valid Email' : 'Invalid Email';                                     // Outputs 'Valid Email'
+    
+    $age_o = '16';
+    $age_f = filter(
+        $age_o,
+        'int',
+        'intval',
+        between(12, 24)
+    );
+    echo $age_f !=== false ? "Valid Age: {$age_f}" : 'Invalid Age {$age_o}'; // Outputs 'Valid Age: 16'
 
 Note: you can use multiple filters with single filter call.
 
