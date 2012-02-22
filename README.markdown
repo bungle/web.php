@@ -17,8 +17,7 @@ Download `web.php` (for logging download `log.php`, and for password hashing dow
 
     <IfModule mod_rewrite.c>
         RewriteCond %{REQUEST_FILENAME} !-f
-    	RewriteCond %{REQUEST_FILENAME} !-d
-    	RewriteRule . index.php [L]
+    	RewriteRule ^ index.php [L]
     </IfModule>
 
 If you are using something other than `Apache` with `mod_rewrite`, Google for instructions.
@@ -280,13 +279,13 @@ TBD
 
 TBD (see: [Facebook's BigPipe](https://www.facebook.com/note.php?note_id=389414033919)).
 
-## Forms, and Filters
+## Filters and Forms (including validation)
 
 TBD
 
 ## Other Features
 ### Sending Files
-#### XSendfile Support
+#### X-Sendfile Support
 ### Logging with `log.php`
 #### Logging with ChromePHP
 #### Extending the Logger
@@ -331,11 +330,11 @@ Try these:
 * Perl: [Mojolicious](http://mojolicio.us/)
 * Ruby: [Sinatra](http://www.sinatrarb.com/)
 * Python: [web.py](http://webpy.org/)
-* Javascript: [Node.js](http://nodejs.org/)
+* Javascript: [Node.js](http://nodejs.org/) + [Express](http://expressjs.com/)
 
 #### I see that you are using `goto` inside view class' `__toString`. Isn't `goto` considered harmful?
 
-Feel free to make a fork and change it to `while(true) { ... }` or `do { ... } while (true);` or `for(;;) { ... }`.
+Feel free to make a fork and change it to `while (true) { ... }` or `do { ... } while (true);` or `for(;;) { ... }`.
 
 ## License
 
