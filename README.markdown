@@ -281,7 +281,19 @@ TBD (see: [Facebook's BigPipe](https://www.facebook.com/note.php?note_id=3894140
 
 ## Filters and Forms (including validation)
 
-TBD
+### Filtering and Validating Variables
+
+Use `filter()` to filter a variable:
+
+    <?php
+    $email = 'root@sunet.se';
+    echo filter($email, 'email') ? 'Valid Email' : 'Invalid Email';
+
+#### Predefined Filters and Validators
+
+    'bool', 'int', 'float', 'ip', 'ipv4', 'ipv6', 'email', and 'url'
+
+
 
 ## Other Features
 ### Sending Files
