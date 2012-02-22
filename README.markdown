@@ -331,7 +331,7 @@ Try these:
 * Perl: [Mojolicious](http://mojolicio.us/)
 * Ruby: [Sinatra](http://www.sinatrarb.com/)
 * Python: [web.py](http://webpy.org/)
-* Javascript: [Node.js](http://nodejs.org/)
+* Javascript: [Node.js](http://nodejs.org/) + [Express](http://expressjs.com/)
 
 #### I see that you are using `goto` inside view class' `__toString`. Isn't `goto` considered harmful?
 
