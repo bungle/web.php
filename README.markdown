@@ -330,7 +330,7 @@ Example:
         'intval',
         between(12, 24)
     );
-    echo $age_f !=== false ? "Valid Age: {$age_f}" : 'Invalid Age {$age_o}'; // Outputs 'Valid Age: 16'
+    echo $age_f !== false ? "Valid Age: {$age_f}" : 'Invalid Age {$age_o}'; // Outputs 'Valid Age: 16'
 
 Note: you can use multiple filters with single filter call.
 
@@ -351,10 +351,10 @@ The most simple modifying filter:
 The most simple validating filters:
 
     <?php
-    function true_valitator($value) {
+    function true_validator($value) {
         return true;
     }
-    function false_valitator($value) {
+    function false_validator($value) {
         return false;
     }    
     $valid = filter('Hello', 'true_validator');                    // $valid holds true
@@ -363,8 +363,22 @@ The most simple validating filters:
 You can also mix modifying filters and validating filters:
 
     <?php
-    $newvalue = filter('1', 'int', 'intval'); // $newvalue holds (int) 1
-    $newvalue = filter('A', 'int', 'intval'); // $newvalue holds false
+    $newvalue = filter('1', 'int', 'intval'); // $newvalue holds int(1)
+    $newvalue = filter('A', 'int', 'intval'); // $newvalue holds bool(false)
+
+Sometimes you need to write parameterized filters:
+
+    <?php
+    function lessthan($number) {
+        return function($value) use ($number) {
+            return $value < $number;
+        };    
+    }
+    
+    $num = '5';
+    echo filter($num, 'int', 'intval', lessthan(6)) ? "{$num} is less than 6" : "{$num} is not less than 6";
+
+Note: You can also have your filter functions namespaced.
 
 ## Other Features
 ### Sending Files
