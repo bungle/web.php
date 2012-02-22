@@ -315,9 +315,17 @@ But that is not all, web.php comes with these functions to aid in validation:
 
     <?php
     $email = 'john@doe.net';
-    echo filter($email, 'email', choice('john@doe.net', 'john@doe.com')) ? 'Valid Email' : 'Invalid Email';  // Outputs 'Valid Email'
+    echo filter(
+        $email,
+        'email',
+        choice('john@doe.net', 'john@doe.com')
+    ) ? 'Valid Email' : 'Invalid Email';  // Outputs 'Valid Email'
     $email = 'john@doe.org';
-    echo filter($email, 'email', choice('john@doe.net', 'john@doe.com')) ? 'Valid Email' : 'Invalid Email';  // Outputs 'Invalid Email'
+    echo filter(
+        $email,
+        'email',
+        choice('john@doe.net', 'john@doe.com')
+    ) ? 'Valid Email' : 'Invalid Email';  // Outputs 'Invalid Email'
 
 ## Other Features
 ### Sending Files
