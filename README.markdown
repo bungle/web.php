@@ -345,10 +345,7 @@ The most simple modifying filter:
     function world_filter($value) {
         return "{$value} World!";
     }
-    // Usage:
-    $text = 'Hello';
     echo filter('Hello', 'world_filter');               // Outputs 'Hello World!'
-    // or
     echo filter('Hello', 'world_filter', 'strtoupper'); // Outputs 'HELLO WORLD!'
 
 The most simple validating filters:
