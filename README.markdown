@@ -285,7 +285,7 @@ TBD
 
 ## Other Features
 ### Sending Files
-#### XSendfile Support
+#### X-Sendfile Support
 ### Logging with `log.php`
 #### Logging with ChromePHP
 #### Extending the Logger
