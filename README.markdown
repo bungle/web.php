@@ -214,9 +214,9 @@ Note: All the view variables are also accessible from layouts.
 *section.php:*
 
     <?php $layout = 'master.php' ?>
-    <div id="main-section">
+    <section>
         <?= $view ?>
-    </div>
+    </section>
 
 *master.php:*
 
