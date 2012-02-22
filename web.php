@@ -25,7 +25,7 @@ function route($path, $func) {
     if (substr_count($prnf, '%') !== count($args)) return false;
     $path = vsprintf($prnf, $args);
     if ($path !== $url) return false;
-    $args = array_map(function($value) { return is_string($value) ? urldecode($value) : $value;    }, $args);
+    $args = array_map(function($value) { return is_string($value) ? urldecode($value) : $value; }, $args);
     return call($func, $args);
 }
 function call($func, array $args = array()) {
