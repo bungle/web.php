@@ -363,8 +363,8 @@ The most simple validating filters:
 You can also mix modifying filters and validating filters:
 
     <?php
-    $newvalue = filter('1', 'int', 'intval'); // $newvalue holds int(1)
-    $newvalue = filter('A', 'int', 'intval'); // $newvalue holds bool(false)
+    $value = filter('1', 'int', 'intval'); // $value holds int(1)
+    $value = filter('A', 'int', 'intval'); // $value holds bool(false)
 
 Sometimes you need to write parameterized filters:
 
@@ -380,7 +380,7 @@ Sometimes you need to write parameterized filters:
 
 Note: You can also have your filter functions namespaced.
 
-#### Forms Validation
+### Forms Filtering and Validation
 
 TBD
 
