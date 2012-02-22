@@ -316,18 +316,18 @@ But that is not all, web.php comes with these functions to aid in validation:
 Example:
 
     <?php
-    $email = 'john\@doe.net';
+    $email = 'john@doe.net';
     echo filter(
         $email,
         'email',
-        choice('john\@doe.net', 'john\@doe.com')
-    ) ? 'Valid Email' : 'Invalid Email';  // Outputs Valid Email
-    $email = 'john\@doe.org';
+        choice('john@doe.net', 'john@doe.com')
+    ) ? 'Valid Email' : 'Invalid Email';  // Outputs 'Valid Email'
+    $email = 'john@doe.org';
     echo filter(
         $email,
         'email',
-        choice('john\@doe.net', 'john\@doe.com')
-    ) ? 'Valid Email' : 'Invalid Email';  // Outputs Invalid Email
+        choice('john@doe.net', 'john\@doe.com')
+    ) ? 'Valid Email' : 'Invalid Email';  // Outputs 'Invalid Email'
 
 Note: you can use multiple filters with single filter call.
 
