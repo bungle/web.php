@@ -313,6 +313,8 @@ But that is not all, web.php comes with these functions to aid in validation:
 * `maxvalue($max)`
 * `choice()`
 
+Example:
+
     <?php
     $email = 'john\@doe.net';
     echo filter(
@@ -327,6 +329,7 @@ But that is not all, web.php comes with these functions to aid in validation:
         choice('john\@doe.net', 'john\@doe.com')
     ) ? 'Valid Email' : 'Invalid Email';  // Outputs Invalid Email
 
+Note: you can use multiple filters with single filter call.
 
 ## Other Features
 ### Sending Files
