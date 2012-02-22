@@ -335,7 +335,7 @@ Try these:
 
 #### I see that you are using `goto` inside view class' `__toString`. Isn't `goto` considered harmful?
 
-Feel free to make a fork and change it to `while(true) { ... }` or `do { ... } while (true);` or `for(;;) { ... }`.
+Feel free to make a fork and change it to `while (true) { ... }` or `do { ... } while (true);` or `for(;;) { ... }`.
 
 ## License
 
