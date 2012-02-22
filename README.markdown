@@ -18,7 +18,7 @@ Download `web.php` (for logging download `log.php`, and for password hashing dow
     <IfModule mod_rewrite.c>
         RewriteCond %{REQUEST_FILENAME} !-f
     	RewriteCond %{REQUEST_FILENAME} !-d
-    	RewriteRule . index.php [L]
+    	RewriteRule ^ index.php [L]
     </IfModule>
 
 If you are using something other than `Apache` with `mod_rewrite`, Google for instructions.
