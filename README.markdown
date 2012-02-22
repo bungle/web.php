@@ -291,9 +291,15 @@ Use `filter()` to filter a variable:
 
 #### Predefined Filters and Validators
 
+web.php has these built-in validators available that come with PHP's [Filter Funtions](http://www.php.net/manual/ref.filter.php):
+
     'bool', 'int', 'float', 'ip', 'ipv4', 'ipv6', 'email', and 'url'
 
+In addition to that you can validate using regular expressions:
 
+    <?php
+    $email = 'root@sunet.se';
+    echo filter($email, '/^.+@.+$/') ? 'Valid Email' : 'Invalid Email';
 
 ## Other Features
 ### Sending Files
