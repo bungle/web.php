@@ -31,7 +31,7 @@ function route($path, $func) {
 function call($func, array $args = array()) {
     if (is_string($func)) {
         if (file_exists($func)) return require $func;
-        if (iconv_strpos($func, '->') !== false) {
+        if (strpos($func, '->') > 0) {
             list($clazz, $method) = explode('->', $func, 2);
             $func = array(new $clazz, $method);
         }
@@ -216,50 +216,30 @@ function pagelets($id = null, $func = null) {
 }
 // Filters
 function filter() {
-    $count = func_num_args();
-    $field = func_get_arg(0);
-    $value = $field instanceof field ? $field->value : $field;
-    $original = $value;
-    for ($i = 1; $i < $count; $i++) {
-        $filter = func_get_arg($i);
+    $filters = func_get_args();
+    $value = $original = array_shift($filters);
+    $valid = true;
+    foreach ($filters as $filter) {
         if ($filter === true) continue;
-        if ($filter === false) {   
-            $valid = false;
-        } else  {
-            $valid = true;
-            switch ($filter) {
-                case 'bool':  $valid = false !== filter_var($value, FILTER_VALIDATE_BOOLEAN); break;
-                case 'int':   $valid = false !== filter_var($value, FILTER_VALIDATE_INT); break;
-                case 'float': $valid = false !== filter_var($value, FILTER_VALIDATE_FLOAT); break;
-                case 'ip':    $valid = false !== filter_var($value, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6); break;
-                case 'ipv4':  $valid = false !== filter_var($value, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4); break;
-                case 'ipv6':  $valid = false !== filter_var($value, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6); break;
-                case 'email': $valid = false !== filter_var($value, FILTER_VALIDATE_EMAIL); break;
-                case 'url':   $valid = false !== filter_var($value, FILTER_VALIDATE_URL); break;
-                default:
-                    if (is_callable($filter) || is_string($filter)) {
-                        if (is_string($filter) && strpos($filter, '/') === 0) {
-                            $valid = preg_match($filter, $value);
-                        } else {
-                            $filtered = call_user_func($filter, $value);
-                            if ($filtered !== null) {
-                                if (is_bool($filtered)) {
-                                    $valid = $filtered;
-                                } else {
-                                    $value = $filtered;
-                                    if ($field instanceof field) $field->value = $value;
-                                }
-                            }
-                        }
-                    } else {
-                        trigger_error(sprintf('Invalid filter: %s', $filter), E_USER_WARNING);
-                    }
-            }
+        if ($filter === false) return false;
+        switch ($filter) {
+            case 'bool':  $valid = false !== filter_var($value, FILTER_VALIDATE_BOOLEAN); break;
+            case 'int':   $valid = false !== filter_var($value, FILTER_VALIDATE_INT); break;
+            case 'float': $valid = false !== filter_var($value, FILTER_VALIDATE_FLOAT); break;
+            case 'ip':    $valid = false !== filter_var($value, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6); break;
+            case 'ipv4':  $valid = false !== filter_var($value, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4); break;
+            case 'ipv6':  $valid = false !== filter_var($value, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6); break;
+            case 'email': $valid = false !== filter_var($value, FILTER_VALIDATE_EMAIL); break;
+            case 'url':   $valid = false !== filter_var($value, FILTER_VALIDATE_URL); break;
+            default:
+                if (is_string($filter) && strpos($filter, '/') === 0)
+                    $valid = preg_match($filter, $value) > 0;
+                else if (is_callable($filter)) {
+                    $filtered = call_user_func($filter, $value);
+                    if (is_bool($filtered)) $valid = $filtered; else $value = $filtered;
+                } else trigger_error(sprintf('Invalid filter: %s', $filter), E_USER_WARNING);
         }
-        if (!$valid) {
-            if ($field instanceof field) $field->valid = false;
-            return false;
-        }
+        if (!$valid) return false;
     }
     return $value !== $original ? $value : true;
 }
@@ -281,20 +261,20 @@ function equal($exact, $strict = true) {
 function length($min, $max = null, $charset = 'UTF-8') {
     return function($value) use ($min, $max, $charset) {
         $value = $value instanceof field ? $value->value : $value;
-        $len = iconv_strlen($value, $charset);
+        $len = mb_strlen($value, $charset);
         return $len >= $min && $len <= ($max == null ? $min : $max);
     };
 }
 function minlength($min, $charset = 'UTF-8') {
     return function($value) use ($min, $charset) {
         $value = $value instanceof field ? $value->value : $value;
-        return iconv_strlen($value, $charset) >= $min;
+        return mb_strlen($value, $charset) >= $min;
     };
 }
 function maxlength($max, $charset = 'UTF-8') {
     return function($value) use ($max, $charset) {
         $value = $value instanceof field ? $value->value : $value;
-        return iconv_strlen($value, $charset) <= $max;
+        return mb_strlen($value, $charset) <= $max;
     };
 }
 function between($min, $max) {
@@ -337,7 +317,7 @@ function slug($str, $delimiter = '-', $width = null) {
 }
 // Form
 class form {
-    public $valid;
+    public $valid = true;
     function __construct($args = null) {
         if ($args == null) return;
         foreach ($args as $name => $value) $this->$name = $value;
@@ -346,20 +326,17 @@ class form {
         if (!isset($this->$name)) $this->$name = new field;
         return $this->$name;
     }
-    function __set($name, $field_or_value) {
-        $this->$name = $field_or_value instanceof field ? $field_or_value : new field($field_or_value);
+    function __set($name, $value) {
+        $this->$name = new field($value);
     }
     function __call($name, $args) {
-        $field = new field($args[0]);
-        $this->$name = $field;
-        return $field;
-    }
+        $field = $this->$name;
+        return $field();
+    }    
     function validate() {
         foreach($this as $field) {
-            if ($field instanceof field && !$field->valid) {
-                $this->valid = false;
-                return false;
-            }
+            if ($field instanceof field && !$field->valid)
+                return $this->valid = false;
         }
         return $this->valid = true;
     }
@@ -373,8 +350,16 @@ class field {
     }
     function filter() {
         $filters = func_get_args();
-        array_unshift($filters, $this);
-        return call_user_func_array('filter', $filters);
+        foreach ($filters as $filter) {
+            $filtered = filter($this->value, $filter);
+            if ($filtered === true) continue;
+            if ($filtered === false) {
+                $this->valid = false;
+                break;
+            }
+            $this->value = $filtered;
+        }
+        return $this;
     }
     function __invoke() {
         return $this->value;
