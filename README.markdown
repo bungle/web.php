@@ -417,6 +417,12 @@ If you want to run cleanup code, please try to build your code so that cleanup r
 It depends on what you compare it to. But if you compare it to other PHP frameworks, web.php will surely stand the
 competition. If you know how web.php could be made faster, please let us know it too!
 
+#### What is the philosphy behind web.php?
+
+If there is any. This comes to close:
+
+> Perfection is achieved, not when there is nothing more to add, but when there is nothing left to take away. --  Antoine de Saint-Exuper
+
 #### web.php doesn't provide object relational mapper (ORM), what do you suggest?
 
 You could try these:
