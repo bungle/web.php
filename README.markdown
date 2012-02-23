@@ -421,7 +421,8 @@ competition. If you know how web.php could be made faster, please let us know it
 
 If there is any, this comes to close:
 
-> Perfection is achieved, not when there is nothing more to add, but when there is nothing left to take away. --  Antoine de Saint-Exuper
+> Perfection is achieved, not when there is nothing more to add, but when there is nothing left to take away.  
+--  Antoine de Saint-Exuper
 
 #### web.php doesn't provide object relational mapper (ORM), what do you suggest?
 
