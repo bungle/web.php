@@ -417,7 +417,7 @@ If you want to run cleanup code, please try to build your code so that cleanup r
 It depends on what you compare it to. But if you compare it to other PHP frameworks, web.php will surely stand the
 competition. If you know how web.php could be made faster, please let us know it too!
 
-#### What is the philosphy behind web.php?
+#### What is the philosophy behind web.php?
 
 If there is any, this comes to close:
 
