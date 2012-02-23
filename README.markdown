@@ -419,7 +419,7 @@ competition. If you know how web.php could be made faster, please let us know it
 
 #### What is the philosphy behind web.php?
 
-If there is any. This comes to close:
+If there is any, this comes to close:
 
 > Perfection is achieved, not when there is nothing more to add, but when there is nothing left to take away. --  Antoine de Saint-Exuper
 
