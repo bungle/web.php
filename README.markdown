@@ -99,7 +99,7 @@ Use `put($path, $func)` to route HTTP PUT requests. See the *GET Routes* example
 
 Use `delete($path, $func)` to route HTTP DELETE requests. See the *GET Routes* examples.
 
-### All Routes
+### Routing All Types of Requests
 
 Use `route($path, $func)` to route all HTTP requests. See the *GET Routes* examples.
 
@@ -281,6 +281,107 @@ TBD (see: [Facebook's BigPipe](https://www.facebook.com/note.php?note_id=3894140
 
 ## Filters and Forms (including validation)
 
+### Filtering and Validating Variables
+
+Use `filter()` to filter a variable:
+
+    <?php
+    $email = 'root@sunet.se';
+    echo filter($email, 'email') ? 'Valid Email' : 'Invalid Email';
+
+#### Built-in Filters and Validators
+
+web.php has these built-in validators available that come with PHP's [Filter Funtions](http://www.php.net/manual/ref.filter.php):
+
+    'bool', 'int', 'float', 'ip', 'ipv4', 'ipv6', 'email', and 'url'
+
+In addition to that you can validate using regular expressions:
+
+    <?php
+    $email = 'john@doe.net';
+    echo filter($email, '/^.+@.+$/') ? 'Valid Email' : 'Invalid Email'; // Outputs 'Valid Email'
+
+But that is not all, web.php comes with these functions to aid in validation:
+
+* `not($filter)`
+* `equal($exact, $strict = true)`
+* `length($min, $max = null, $charset = 'UTF-8')`
+* `minlength($min, $charset = 'UTF-8')`
+* `maxlength($max, $charset = 'UTF-8')`
+* `between($min, $max)`
+* `minvalue($min)`
+* `maxvalue($max)`
+* `choice()`
+
+Example:
+
+    <?php
+    $email = 'john@doe.net';
+    echo filter(
+        $email,
+        'email',
+        choice('john@doe.net', 'john@doe.com')
+    ) ? 'Valid Email' : 'Invalid Email'; // Outputs 'Valid Email'
+    
+    $age_o = '16';
+    $age_f = filter(
+        $age_o,
+        'int',
+        'intval',
+        not(between(0, 18))
+    );
+    echo $age_f !== false ? 'Under-aged: {$age_o}' : "Over-aged: {$age_f}"; // Outputs 'Under-aged: 16'
+
+Note: you can use multiple filters with single filter call.
+
+#### User Defined Filters and Validators
+
+Filters can either modify the `$value` or validate the `$value`. If validation filter fails, the filter function will
+return false immediately.
+
+The most simple modifying filter:
+
+    <?php
+    function world_filter($value) {
+        return "{$value} World!";
+    }
+    echo filter('Hello', 'world_filter');               // Outputs 'Hello World!'
+    echo filter('Hello', 'world_filter', 'strtoupper'); // Outputs 'HELLO WORLD!'
+
+The most simple validating filters:
+
+    <?php
+    function true_validator($value) {
+        return true;
+    }
+    function false_validator($value) {
+        return false;
+    }    
+    $valid = filter('Hello', 'true_validator');                    // $valid holds true
+    $valid = filter('Hello', 'true_validator', 'false_validator'); // $valid holds false
+
+You can also mix modifying filters and validating filters:
+
+    <?php
+    $value = filter('1', 'int', 'intval'); // $value holds int(1)
+    $value = filter('A', 'int', 'intval'); // $value holds bool(false)
+
+Sometimes you need to write parameterized filters:
+
+    <?php
+    function lessthan($number) {
+        return function($value) use ($number) {
+            return $value < $number;
+        };    
+    }
+    
+    $num = '5';
+    echo filter($num, 'int', 'intval', lessthan(6)) ? "{$num} is less than 6" : "{$num} is not less than 6";
+
+Note: You can also have your filter functions namespaced.
+
+### Forms Filtering and Validation
+
 TBD
 
 ## Other Features
@@ -310,6 +411,18 @@ one will also be executed if it matches the url. That's why it's common to `die`
 
 If you want to run cleanup code, please try to build your code so that cleanup routines can be registered with
 `register_shutdown_function`.
+
+#### How fast is web.php?
+
+It depends on what you compare it to. But if you compare it to other PHP frameworks, web.php will surely stand the
+competition. If you know how web.php could be made faster, please let us know it too!
+
+#### What is the philosophy behind web.php?
+
+If there is any, this comes to close:
+
+> Perfection is achieved, not when there is nothing more to add, but when there is nothing left to take away.  
+--  *Antoine de Saint-Exupéry*
 
 #### web.php doesn't provide object relational mapper (ORM), what do you suggest?
 
