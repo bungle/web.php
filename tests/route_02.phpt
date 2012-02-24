@@ -2,7 +2,7 @@
 route() function - '/no-handler' route.
 --ENV--
 return <<<END
-REQUEST_URI=/no-handler/
+REQUEST_URI=/no-handler
 END;
 --FILE--
 <?php
