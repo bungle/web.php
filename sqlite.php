@@ -1,13 +1,11 @@
 <?php
 namespace sqlite;
-
 class blob {
     public $data;
     function __construct($data = null) {
         $this->data = $data;
     }
 }
-
 function connect($filename = null, $flags = SQLITE3_OPEN_READWRITE) {
     static $sqlite = null;
     if ($sqlite == null && $filename != null) {
@@ -17,7 +15,6 @@ function connect($filename = null, $flags = SQLITE3_OPEN_READWRITE) {
     }
     return $sqlite;
 }
-
 function prepare() {
     $count = func_num_args();
     if ($count === 0) return false;
@@ -28,7 +25,6 @@ function prepare() {
     if ($st === false) return false;
     return bindValues($st, $params);
 }
-
 function bindValues(\SQLite3Stmt $st, array $params) {
     $count = count($params);
     for($i = 0; $i < $count;) {
@@ -55,7 +51,6 @@ function bindValues(\SQLite3Stmt $st, array $params) {
     }
     return $st;
 }
-
 function exec() {
     $count = func_num_args();
     if ($count === 0) return false;
@@ -64,7 +59,6 @@ function exec() {
     $query = array_shift($params);
     return execStatement($query, $params);
 }
-
 function execStatement($query, $params) {
     $st = prepare($query);
     if ($st === false) return false;
@@ -78,7 +72,6 @@ function execStatement($query, $params) {
     $st->close();
     return $changes;
 }
-
 function query() {
     $params = func_get_args();
     $count = count($params);
@@ -98,7 +91,6 @@ function query() {
     $query = array_shift($params);
     return queryStatement($query, $params, $filter);
 }
-
 function queryStatement($query, $params = array(), $filter = false) {
     $st = prepare($query);
     if ($st === false) return false;
@@ -112,7 +104,6 @@ function queryStatement($query, $params = array(), $filter = false) {
     $st->close();
     return $rows;
 }
-
 function singleValue() {
     $count = func_num_args();
     if ($count === 0) return false;
@@ -121,7 +112,6 @@ function singleValue() {
     $query = array_shift($params);
     return singleStatement($query, $params);
 }
-
 function singleRow() {
     $count = func_num_args();
     if ($count === 0) return false;
@@ -130,7 +120,6 @@ function singleRow() {
     $query = array_shift($params);
     return singleStatement($query, $params, true);
 }
-
 function singleStatement($query, $params, $entire_row = false) {
     $st = prepare($query);
     if ($st === false) return false;
@@ -145,11 +134,9 @@ function singleStatement($query, $params, $entire_row = false) {
     if ($entire_row || $row === false) return $row;
     return $row[0];
 }
-
 function escape($value) {
     return connect()->escapeString($value);
 }
-
 function rows($rs, $filter = false) {
     $rows = array();
     if ($filter === false) {
