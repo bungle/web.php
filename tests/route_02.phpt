@@ -9,7 +9,7 @@ END;
 $_SERVER['SCRIPT_NAME'] = '/index.php';
 include '../web.php';
 var_dump(route('/', function() {
-    die(var_dump(true));
+    return true;
 }));
 ?>
 --EXPECT--
