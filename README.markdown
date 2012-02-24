@@ -436,6 +436,11 @@ You could also try our NoSQL DBs like:
 * [Redis](http://redis.io/)
 * [MongoDB](http://www.mongodb.org/)
 
+#### How do I run the tests?
+
+    cd tests
+    pear run-tests
+
 #### PHP Sucks! Where to go next?
 
 Try these:
