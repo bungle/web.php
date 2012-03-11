@@ -424,6 +424,8 @@ If there is any, this comes to close:
 > Perfection is achieved, not when there is nothing more to add, but when there is nothing left to take away.  
 --  *Antoine de Saint-Exupéry*
 
+web.php is trying to follow the principles of [Unix philosophy](http://en.wikipedia.org/wiki/Unix_philosophy).
+
 #### web.php doesn't provide object relational mapper (ORM), what do you suggest?
 
 You could try these:
