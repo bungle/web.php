@@ -433,7 +433,7 @@ You could try these:
 * [RedBeanPHP](http://redbeanphp.com/)
 * [Doctrine](http://www.doctrine-project.org/)
 
-You could also try our NoSQL DBs like:
+You could also try out NoSQL DBs like:
 
 * [Redis](http://redis.io/)
 * [MongoDB](http://www.mongodb.org/)
