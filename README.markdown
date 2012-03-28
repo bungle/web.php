@@ -130,7 +130,7 @@ Use `redirect($url, $code = 301, $die = true)` to redirect the user in other pag
     <?php
     session_start();
     get('/', function() {
-        die(isset($_SESSION['redirected]) ? 'Redirected' : 'Welcome!');
+        die(isset($_SESSION['redirected']) ? 'Redirected' : 'Welcome!');
     });
 
     post('/', function() {
