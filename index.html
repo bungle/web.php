@@ -1,0 +1,583 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>web.php by bungle</title>
+    
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>web.php</h1>
+        <p>web.php is a zero configuration web development library for PHP.</p>
+        <p class="view"><a href="https://github.com/bungle/web.php">View the Project on GitHub <small>bungle/web.php</small></a></p>
+        <ul>
+          <li><a href="https://github.com/bungle/web.php/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/bungle/web.php/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/bungle/web.php">Fork On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <p><img src="http://code.google.com/p/web-dot-php/logo" alt="web.php-logo"><br><strong>web.php</strong> is a zero configuration web development library for PHP.</p>
+
+<h2>Hello World in web.php</h2>
+
+<pre><code>&lt;?php
+include 'web.php';
+get('/', function() {
+    die('Hello, World!');
+});
+</code></pre>
+
+<h2>Installation</h2>
+
+<p>Download <code>web.php</code> (for logging download <code>log.php</code>, and for password hashing download <code>password.php</code>).  </p>
+
+<h3>Modify .htaccess</h3>
+
+<pre><code>&lt;IfModule mod_rewrite.c&gt;
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^ index.php [L]
+&lt;/IfModule&gt;
+</code></pre>
+
+<p>If you are using something other than <code>Apache</code> with <code>mod_rewrite</code>, Google for instructions.</p>
+
+<h3>Create <code>index.php</code> Bootstrap File</h3>
+
+<pre><code>&lt;?php
+include 'web.php';
+get('/', function() {
+    die('Hello, World!');
+});
+status('404');
+die('404 Not Found');
+</code></pre>
+
+<h2>Routing</h2>
+
+<p><code>web.php</code> has support for routing HTTP GET, POST, PUT, and DELETE request. Routes are case-insensitive, and the trailing <code>/</code> is omitted.</p>
+
+<h3>GET Routes</h3>
+
+<p>Use <code>get($path, $func)</code> to route HTTP GET requests.</p>
+
+<h4>Routes without Parameters (the Routes Work on Sub-Directories too):</h4>
+
+<pre><code>&lt;?php
+get('/', function() {
+    die('Hello, World!');
+});
+</code></pre>
+
+<p>or:</p>
+
+<pre><code>&lt;?php
+get('/posts', function() {
+    die(json_encode(array(
+        array(
+            'id'    =&gt; 1,
+            'title' =&gt; 'Trying out web.php',
+            'body'  =&gt; 'Lorem...' 
+        ),
+        array(
+            'id'    =&gt; 2,
+            'title' =&gt; 'I'm really starting to like web.php',
+            'body'  =&gt; 'Lorem...' 
+        )
+    )));
+});
+</code></pre>
+
+<h4>Parameterized Routes</h4>
+
+<p>Route parameters in <code>web.php</code> are parsed with <code>sscanf</code> and <code>vsprintf</code>, but we have added extra parameter <code>%p</code> which acts
+the same as <code>%[^/]</code> (everything until or except <code>/</code>). Please read the documentation for the format from
+<a href="http://www.php.net/manual/function.sprintf.php">sprintf's</a> documentation.</p>
+
+<pre><code>&lt;?php
+get('/posts/%d', function($id) {
+    switch ($id) {
+        case 1: die(json_encode(array(
+                'id'    =&gt; 1,
+                'title' =&gt; 'Trying out web.php',
+                'body'  =&gt; 'Lorem...' 
+            )));
+        case 2: die(json_encode(array(
+                'id'    =&gt; 2,
+                'title' =&gt; 'I'm really starting to like web.php',
+                'body'  =&gt; 'Lorem...' 
+            )));
+    }
+}
+</code></pre>
+
+<h3>POST Routes</h3>
+
+<p>Use <code>post($path, $func)</code> to route HTTP POST requests. See the <em>GET Routes</em> examples.</p>
+
+<h3>PUT Routes</h3>
+
+<p>Use <code>put($path, $func)</code> to route HTTP PUT requests. See the <em>GET Routes</em> examples.</p>
+
+<h3>DELETE Routes</h3>
+
+<p>Use <code>delete($path, $func)</code> to route HTTP DELETE requests. See the <em>GET Routes</em> examples.</p>
+
+<h3>Routing All Types of Requests</h3>
+
+<p>Use <code>route($path, $func)</code> to route all HTTP requests. See the <em>GET Routes</em> examples.</p>
+
+<h2>Forwards and Redirects</h2>
+
+<h3>Forwards</h3>
+
+<p>Use <code>forward($name, $func)</code> to register a named forward. Call a named forward with <code>forward($name)</code>.
+Forwards need to be registered before using them.</p>
+
+<pre><code>&lt;?php
+forward('index', function() {
+    die('Index Page');
+});
+
+get('/', function() {
+    forward('index')
+});
+
+get('/another-url', function() {
+    forward('index')
+});
+</code></pre>
+
+<h3>Redirects</h3>
+
+<p>Use <code>redirect($url, $code = 301, $die = true)</code> to redirect the user in other page.</p>
+
+<pre><code>&lt;?php
+session_start();
+get('/', function() {
+    die(isset($_SESSION['redirected']) ? 'Redirected' : 'Welcome!');
+});
+
+post('/', function() {
+    flash('redirected', true);
+    redirect('~/');
+});
+</code></pre>
+
+<h2>Views, Layouts, Blocks, Partials, and Pagelets</h2>
+
+<p><code>web.php</code> has support for views, and layouts (or even sub-layouts).</p>
+
+<h3>Views</h3>
+
+<pre><code>&lt;?php
+get('/', function() {
+    die(new view('view.php'));
+});
+</code></pre>
+
+<p><em>view.php:</em></p>
+
+<pre><code>&lt;!DOCTYPE html&gt;
+Hello World
+</code></pre>
+
+<h4>Views with Properties</h4>
+
+<pre><code>&lt;?php
+get('/%s', function($text) {
+    $view = new view('view.php');
+    $view-&gt;text = htmlspecialchars($text);
+    die($view);
+});
+</code></pre>
+
+<p><em>view.php:</em></p>
+
+<pre><code>&lt;!DOCTYPE html&gt;
+Hello, &lt;?= $text ?&gt;!
+</code></pre>
+
+<h4>Global View Variables</h4>
+
+<p>You can define global view variables that all the views will get with the following code:</p>
+
+<pre><code>&lt;?php
+view::$globals-&gt;title = 'web.php rocks!';
+</code></pre>
+
+<p>Note: If local view variables are defined with same name as global variables, local variables overwrite the global ones.
+The globals are still accessible from <code>view::$globals</code>.</p>
+
+<h3>Layouts</h3>
+
+<p>You can define the layout by setting the <code>layout</code> variable in a view, you can do it like this:</p>
+
+<pre><code>&lt;?php
+view::$globals-&gt;layout = 'layout.php';      // or
+$view = new view('view.php', 'layout.php'); // or
+$view = new view('view.php');
+$view-&gt;layout = 'layout.php';               // or
+$view = new view('view.php');               // see 'view.php'
+</code></pre>
+
+<p><em>view.php:</em></p>
+
+<pre><code>&lt;?php $layout = 'layout.php'; ?&gt;
+Hello, World!
+</code></pre>
+
+<p><em>layout.php:</em></p>
+
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;body&gt;&lt;?= $view ?&gt;&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+
+<p>Note: All the view variables are also accessible from layouts.</p>
+
+<h4>Nested Layouts</h4>
+
+<p><em>view.php:</em></p>
+
+<pre><code>&lt;?php $layout = 'section.php' ?&gt;
+&lt;p&gt;Hello World&lt;/p&gt;
+</code></pre>
+
+<p><em>section.php:</em></p>
+
+<pre><code>&lt;?php $layout = 'master.php' ?&gt;
+&lt;section&gt;
+    &lt;?= $view ?&gt;
+&lt;/section&gt;
+</code></pre>
+
+<p><em>master.php:</em></p>
+
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;body&gt;
+        &lt;?= $view ?&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+
+<h3>Blocks</h3>
+
+<p>Blocks are a method to move particular block of 'text' from views to a particular location in layouts.</p>
+
+<p><em>view.php:</em></p>
+
+<pre><code>&lt;?php
+$layout = 'layout.php';
+$title  = 'Blocks - web.php';
+?&gt;
+&lt;?php block($head); ?&gt;
+    &lt;meta name="description" content"web.php has blocks too!"&gt;
+&lt;?php block(); ?&gt;
+
+Hello World!
+
+&lt;?php block($aside); ?&gt;
+    Hello Aside, too!
+&lt;?php block(); ?&gt;
+
+&lt;?php block($scripts); ?&gt;
+    &lt;script src="jquery.min.js"&gt;&lt;/script&gt;
+&lt;?php block(); ?&gt;
+</code></pre>
+
+<p><em>layout.php:</em></p>
+
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;
+            &lt;?= isset($title) ? $title : 'Default Title' ?&gt;
+        &lt;/title&gt;
+        &lt;?= isset($head) ? $head : '' ?&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;article&gt;
+            &lt;?= $view ?&gt;
+        &lt;/article&gt;
+        &lt;?php if (isset($aside)): ?&gt;
+        &lt;aside&gt;
+            &lt;?= $aside ?&gt;
+        &lt;/aside&gt;
+        &lt;?php endif; ?&gt;
+        &lt;?= isset($scripts) ? $scripts : '' ?&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+
+<h3>Partials</h3>
+
+<p>TBD</p>
+
+<h3>Pagelets</h3>
+
+<p>TBD (see: <a href="https://www.facebook.com/note.php?note_id=389414033919">Facebook's BigPipe</a>).</p>
+
+<h2>Filters and Forms (including validation)</h2>
+
+<h3>Filtering and Validating Variables</h3>
+
+<p>Use <code>filter()</code> to filter a variable:</p>
+
+<pre><code>&lt;?php
+$email = 'root@sunet.se';
+echo filter($email, 'email') ? 'Valid Email' : 'Invalid Email';
+</code></pre>
+
+<h4>Built-in Filters and Validators</h4>
+
+<p>web.php has these built-in validators available that come with PHP's <a href="http://www.php.net/manual/ref.filter.php">Filter Funtions</a>:</p>
+
+<pre><code>'bool', 'int', 'float', 'ip', 'ipv4', 'ipv6', 'email', and 'url'
+</code></pre>
+
+<p>In addition to that you can validate using regular expressions:</p>
+
+<pre><code>&lt;?php
+$email = 'john@doe.net';
+echo filter($email, '/^.+@.+$/')
+    ? 'Valid Email'
+    : 'Invalid Email'; // Outputs 'Valid Email'
+</code></pre>
+
+<p>But that is not all, web.php comes with these functions to aid in validation:</p>
+
+<ul>
+<li><code>not($filter)</code></li>
+<li><code>equal($exact, $strict = true)</code></li>
+<li><code>length($min, $max = null, $charset = 'UTF-8')</code></li>
+<li><code>minlength($min, $charset = 'UTF-8')</code></li>
+<li><code>maxlength($max, $charset = 'UTF-8')</code></li>
+<li><code>between($min, $max)</code></li>
+<li><code>minvalue($min)</code></li>
+<li><code>maxvalue($max)</code></li>
+<li><code>choice()</code></li>
+</ul><p>Example:</p>
+
+<pre><code>&lt;?php
+$email = 'john@doe.net';
+echo filter(
+    $email,
+    'email',
+    choice('john@doe.net', 'john@doe.com')
+) ? 'Valid Email' : 'Invalid Email'; // Outputs 'Valid Email'
+
+$age_o = '16';
+$age_f = filter(
+    $age_o,
+    'int',
+    'intval',
+    not(between(0, 18))
+);
+echo $age_f !== false
+    ? 'Under-aged: {$age_o}'
+    : "Over-aged: {$age_f}"; // Outputs 'Under-aged: 16'
+</code></pre>
+
+<p>Note: you can use multiple filters with single filter call.</p>
+
+<h4>User Defined Filters and Validators</h4>
+
+<p>Filters can either modify the <code>$value</code> or validate the <code>$value</code>. If validation filter fails, the filter function will
+return false immediately.</p>
+
+<p>The most simple modifying filter:</p>
+
+<pre><code>&lt;?php
+function world_filter($value) {
+    return "{$value} World!";
+}
+// Outputs 'Hello World!'
+echo filter('Hello', 'world_filter');
+// Outputs 'HELLO WORLD!'
+echo filter('Hello', 'world_filter', 'strtoupper');
+</code></pre>
+
+<p>The most simple validating filters:</p>
+
+<pre><code>&lt;?php
+function true_validator($value) {
+    return true;
+}
+function false_validator($value) {
+    return false;
+}
+// $valid holds true
+$valid = filter('Hello', 'true_validator');
+// $valid holds false
+$valid = filter('Hello', 'true_validator', 'false_validator');
+</code></pre>
+
+<p>You can also mix modifying filters and validating filters:</p>
+
+<pre><code>&lt;?php
+$value = filter('1', 'int', 'intval'); // $value holds int(1)
+$value = filter('A', 'int', 'intval'); // $value holds bool(false)
+</code></pre>
+
+<p>Sometimes you need to write parameterized filters:</p>
+
+<pre><code>&lt;?php
+function lessthan($number) {
+    return function($value) use ($number) {
+        return $value &lt; $number;
+    };    
+}
+
+$num = '5';
+echo filter($num, 'int', 'intval', lessthan(6))
+    ? "{$num} is less than 6"
+    : "{$num} is not less than 6";
+</code></pre>
+
+<p>Note: You can also have your filter functions namespaced.</p>
+
+<h3>Forms Filtering and Validation</h3>
+
+<p>TBD</p>
+
+<h2>Other Features</h2>
+
+<h3>Sending Files</h3>
+
+<h4>X-Sendfile Support</h4>
+
+<h3>Logging with <code>log.php</code>
+</h3>
+
+<h4>Logging with ChromePHP</h4>
+
+<h4>Extending the Logger</h4>
+
+<h3>Password Hashing &amp; Checking with <code>password.php</code>
+</h3>
+
+<h2>FAQ</h2>
+
+<h4>Is routing to anonymous function the only option?</h4>
+
+<p>You can actually route to <code>files</code>, <code>functions</code>, <code>static class methods</code>, and <code>object instance methods</code>:</p>
+
+<pre><code>// Look for $args[0] inside router.php
+get('/%d', 'router.php');
+// URL: /hello will output 'hello' with a built-in function 'die'
+get('/%p', 'die');
+// Executes a static method
+get('/', 'Clazz::staticMethod');
+// Instantiates new object from class 'Clazz' using
+// parameterless constructor
+get('/', 'Clazz-&gt;instanceMethod');
+</code></pre>
+
+<h4>Why are you using 'die' inside controllers? How can I execute code after executing route, i.e. cleanup resources?</h4>
+
+<p>This design decision is probably something that people may or may not agree. We think that it is user's responsibility to
+manage the execution. You don't have to <code>die</code>, but keep in mind that any other route that is executed after the matching
+one will also be executed if it matches the url. That's why it's common to <code>die</code> with web.php.</p>
+
+<p>If you want to run cleanup code, please try to build your code so that cleanup routines can be registered with
+<code>register_shutdown_function</code>.</p>
+
+<h4>How fast is web.php?</h4>
+
+<p>It depends on what you compare it to. But if you compare it to other PHP frameworks, web.php will surely stand the
+competition. If you know how web.php could be made faster, please let us know it too!</p>
+
+<h4>What is the philosophy behind web.php?</h4>
+
+<p>If there is any, this comes to close:</p>
+<blockquote>
+<p>Perfection is achieved, not when there is nothing more to add, but when there is nothing left to take away.<br>
+--  <em>Antoine de Saint-Exupéry</em></p>
+</blockquote>
+<p>web.php is trying to follow the principles of <a href="http://en.wikipedia.org/wiki/Unix_philosophy">Unix philosophy</a>.</p>
+
+<h4>web.php doesn't provide object relational mapper (ORM), what do you suggest?</h4>
+
+<p>You could try these:</p>
+
+<ul>
+<li><a href="http://redbeanphp.com/">RedBeanPHP</a></li>
+<li><a href="http://www.doctrine-project.org/">Doctrine</a></li>
+</ul><p>You could also try out NoSQL DBs like:</p>
+
+<ul>
+<li><a href="http://redis.io/">Redis</a></li>
+<li><a href="http://www.mongodb.org/">MongoDB</a></li>
+</ul><h4>How do I run the tests?</h4>
+
+<pre><code>cd tests
+pear run-tests
+</code></pre>
+
+<h4>PHP Sucks! Where to go next?</h4>
+
+<p>Try these:</p>
+
+<ul>
+<li>Perl: <a href="http://mojolicio.us/">Mojolicious</a>
+</li>
+<li>Ruby: <a href="http://www.sinatrarb.com/">Sinatra</a>
+</li>
+<li>Python: <a href="http://webpy.org/">web.py</a>
+</li>
+<li>Javascript: <a href="http://nodejs.org/">Node.js</a> + <a href="http://expressjs.com/">Express</a>
+</li>
+</ul><h4>I see that you are using <code>goto</code> inside view class' <code>__toString</code>. Isn't <code>goto</code> considered harmful?</h4>
+
+<p>Feel free to make a fork and change it to <code>while (true) { ... }</code> or <code>do { ... } while (true);</code> or <code>for(;;) { ... }</code>.</p>
+
+<h2>License</h2>
+
+<p>web.php is distributed with MIT License.</p>
+
+<pre><code>web.php
+Copyright (c) 2012 Aapo Talvensaari
+
+Permission is hereby granted, free of charge, to any person
+obtaining a copy of this software and associated documentation
+files (the "Software"), to deal in the Software without
+restriction, including without limitation the rights to use,
+copy, modify, merge, publish, distribute, sublicense, and/or
+sell copies of the Software, and to permit persons to whom
+the Software is furnished to do so, subject to the following
+conditions:
+
+The above copyright notice and this permission notice shall
+be included in all copies or substantial portions of the
+Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY
+KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS
+OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+</code></pre>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/bungle">bungle</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><!--<![endif]-->
+  </body>
+</html>
