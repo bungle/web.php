@@ -27,7 +27,6 @@ class postmark {
                 'Content-Type: application/json',
                 "X-Postmark-Server-Token: {$api_key}"
         )));
-        echo json_encode($this);
         $ret = curl_exec($ch);
         curl_close($ch);
         return json_decode($ret);
