@@ -150,3 +150,20 @@ function rows($rs, $filter = false) {
     }
     return $rows;
 }
+
+function update($table, $values, $id = null) {
+    $sql  = "UPDATE {$table} SET " . implode(' = ?, ', array_keys($values));
+    $values = array_values($values);
+    if ($id == null) {
+        $sql .= ' = ?';
+    } else {
+        $sql .= ' = ? WHERE id = ?';
+        $values[] = $id;
+    }
+    return execStatement($sql, $values);
+}
+
+function insert($table, $values) {
+    $sql  = "INSERT INTO {$table} (" . implode(', ', array_keys($values)) . ') VALUES (' . substr(str_repeat(', ?', count($values)), 2) . ')';
+    return execStatement($sql, array_values($values));
+}
