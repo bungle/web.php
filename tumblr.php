@@ -15,7 +15,7 @@ class tumblr {
     function access_token($request_token, $request_secret, $verifier_token) {
         $this->oauth->setToken($request_token, $request_secret);
         return $this->oauth->getAccessToken('http://www.tumblr.com/oauth/access_token', null, $verifier_token);
-    }    
+    }
     function info() {
         return file_get_contents("http://api.tumblr.com/v2/blog/{$this->host}/info?api_key={$this->key}");
     }
