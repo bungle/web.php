@@ -130,7 +130,7 @@ Use `redirect($url, $code = 301, $die = true)` to redirect the user in other pag
     <?php
     session_start();
     get('/', function() {
-        die(isset($_SESSION['redirected]) ? 'Redirected' : 'Welcome!');
+        die(isset($_SESSION['redirected']) ? 'Redirected' : 'Welcome!');
     });
 
     post('/', function() {
@@ -424,6 +424,8 @@ If there is any, this comes to close:
 > Perfection is achieved, not when there is nothing more to add, but when there is nothing left to take away.  
 --  *Antoine de Saint-Exupéry*
 
+web.php is trying to follow the principles of [Unix philosophy](http://en.wikipedia.org/wiki/Unix_philosophy).
+
 #### web.php doesn't provide object relational mapper (ORM), what do you suggest?
 
 You could try these:
@@ -431,7 +433,7 @@ You could try these:
 * [RedBeanPHP](http://redbeanphp.com/)
 * [Doctrine](http://www.doctrine-project.org/)
 
-You could also try our NoSQL DBs like:
+You could also try out NoSQL DBs like:
 
 * [Redis](http://redis.io/)
 * [MongoDB](http://www.mongodb.org/)
