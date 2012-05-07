@@ -16,6 +16,22 @@ class tumblr {
         $this->oauth->setToken($request_token, $request_secret);
         return $this->oauth->getAccessToken('http://www.tumblr.com/oauth/access_token', null, $verifier_token);
     }
+    function authorize($callback_url) {
+        if (isset($_SESSION['request_token'])) {
+            $rt = $_SESSION['request_token'];
+            unset($_SESSION['request_token']);
+            $at =  $this->access_token($rt['oauth_token'], $rt['oauth_token_secret'], $_GET['oauth_verifier']);
+            return array(
+                'request_token' => $rt['oauth_token'],
+                'request_token_secret' => $rt['oauth_token_secret'],
+                'access_token' => $at['oauth_token'],
+                'access_token_secret' => $at['oauth_token_secret']
+            );
+        }
+        $_SESSION['request_token'] = $this->request_token($callback_url);
+        header('Location: http://www.tumblr.com/oauth/authorize?oauth_token='. $_SESSION['request_token']['oauth_token']);
+        die;
+    }
     function info() {
         return file_get_contents("http://api.tumblr.com/v2/blog/{$this->host}/info?api_key={$this->key}");
     }

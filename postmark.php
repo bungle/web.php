@@ -1,14 +1,15 @@
 <?php
 class postmark {
     function attach($path_or_content, $name = null, $mime = null) {
+        $isFile = is_file($path_or_content);
         if ($mime == null) {
             $fnfo = finfo_open(FILEINFO_MIME_TYPE);
-            $mime = is_file($path_or_content) ?
+            $mime = $isFile ?
                 finfo_file($fnfo,   $path_or_content) or 'application/octet-stream' :
                 finfo_buffer($fnfo, $path_or_content) or 'text/plain';
             finfo_close($fnfo);
         }
-        if ($name == null) $name = is_file($path_or_content) ? basename($path_or_content) : 'attachment.txt';
+        if ($name == null) $name = $isFile ? basename($path_or_content) : 'attachment.txt';
         $attachment = new stdClass;
         $attachment->Name = $name;
         $attachment->ContentType = $mime;

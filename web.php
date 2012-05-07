@@ -88,6 +88,9 @@ function status($code) {
         case 415: $msg = 'Unsupported Media Type'; break;
         case 416: $msg = 'Requested Range Not Satisfiable'; break;
         case 417: $msg = 'Expectation Failed'; break;
+        case 428: $msg = 'Precondition Required'; break;
+        case 429: $msg = 'Too Many Requests'; break;
+        case 431: $msg = 'Request Header Fields Too Large'; break;
         // Server Error
         case 500: $msg = 'Internal Server Error'; break;
         case 501: $msg = 'Not Implemented'; break;
@@ -95,6 +98,7 @@ function status($code) {
         case 503: $msg = 'Service Unavailable'; break;
         case 504: $msg = 'Gateway Timeout'; break;
         case 505: $msg = 'HTTP Version Not Supported'; break;
+        case 511: $msg = 'Network Authentication Required'; break;
         default: return;
     }
     $protocol = isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.1';
