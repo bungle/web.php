@@ -54,12 +54,12 @@ function bindValues(\SQLite3Stmt $st, array $params) {
 function exec() {
     $count = func_num_args();
     if ($count === 0) return false;
-    if ($count === 1) return connect()->exec(func_get_arg(0));
+    if ($count === 1) return connect()->exec(func_get_arg(0)) ? connect()->changes() : false;
     $params = func_get_args();
     $query = array_shift($params);
     return execStatement($query, $params);
 }
-function execStatement($query, $params) {
+function execStatement($query, $params, &$id = false) {
     $st = prepare($query);
     if ($st === false) return false;
     $rs = bindValues($st, $params)->execute();
@@ -67,6 +67,7 @@ function execStatement($query, $params) {
         $st->close();
         return false;
     }
+    if ($id !== false) $id = connect()->lastInsertRowID();
     $changes = connect()->changes();
     $rs->finalize();
     $st->close();
@@ -161,7 +162,7 @@ function update($table, $values, $id = null) {
     }
     return execStatement($sql, $values);
 }
-function insert($table, $values) {
+function insert($table, $values, &$id = false) {
     $sql  = "INSERT INTO {$table} (" . implode(', ', array_keys($values)) . ') VALUES (' . substr(str_repeat(', ?', count($values)), 2) . ')';
-    return execStatement($sql, array_values($values));
+    return execStatement($sql, array_values($values), $id);
 }

@@ -207,7 +207,6 @@ function pagelets($id = null, $func = null) {
         ob_flush();
         flush();        
         $pagelets = array_map(function($pagelet) {
-            sleep(10);
             $ret = $pagelet();
             ob_flush();
             flush();
@@ -227,7 +226,7 @@ function filter() {
         if ($filter === true) continue;
         if ($filter === false) return false;
         switch ($filter) {
-            case 'bool':  $valid = false !== filter_var($value, FILTER_VALIDATE_BOOLEAN); break;
+            case 'bool':  $valid = is_bool($value) || false !== filter_var($value, FILTER_VALIDATE_BOOLEAN); break;
             case 'int':   $valid = false !== filter_var($value, FILTER_VALIDATE_INT); break;
             case 'float': $valid = false !== filter_var($value, FILTER_VALIDATE_FLOAT); break;
             case 'ip':    $valid = false !== filter_var($value, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6); break;
@@ -319,6 +318,11 @@ function slug($str, $delimiter = '-', $width = null) {
     $str = strtolower(trim($str, '/_|+ -'));
     return preg_replace('#[/_|+\s-]+#', $delimiter, $str);
 }
+function date_from_format($format = 'Y-m-d', $timezone = null) {
+    return function($value) use ($format, $timezone) {
+        return $timezone instanceof DateTimeZone ? date_create_from_format($format, $value, $timezone) : date_create_from_format($format, $value);
+    };
+}
 // Form
 class form {
     public $valid = true;
@@ -327,16 +331,12 @@ class form {
         foreach ($args as $name => $value) $this->$name = $value;
     }
     function __get($name) {
-        if (!isset($this->$name)) $this->$name = new field;
+        if (!isset($this->$name)) $this->$name = new field($name);
         return $this->$name;
     }
     function __set($name, $value) {
-        $this->$name = new field($value);
+        $this->$name = new field($name, $value);
     }
-    function __call($name, $args) {
-        $field = $this->$name;
-        return $field();
-    }    
     function validate() {
         foreach($this as $field) {
             if ($field instanceof field && !$field->valid)
@@ -344,12 +344,21 @@ class form {
         }
         return $this->valid = true;
     }
+    function data() {
+        $args = func_num_args() > 0;
+        if ($args) $args = func_get_args();
+        $data = array();
+        foreach($this as $field)
+            if ($field instanceof field && $field->valid && ($args === false || in_array($field->name, $args, true)))
+                $data[$field->name] = $field->value;
+        return $data;
+    }    
 }
 class field {
-    public $original, $value, $valid;
-    function __construct($value = null) {
-        $this->original = $value;
-        $this->value = $value;
+    public $name, $value, $original, $valid;
+    function __construct($name, $value = null) {
+        $this->name = $name;
+        $this->value = $this->original = $value;
         $this->valid = true;
     }
     function filter() {
@@ -364,9 +373,6 @@ class field {
             $this->value = $filtered;
         }
         return $this;
-    }
-    function __invoke() {
-        return $this->value;
     }
     function __toString() {
         return strval($this->value);
