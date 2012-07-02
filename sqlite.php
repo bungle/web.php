@@ -6,150 +6,130 @@ class blob {
         $this->data = $data;
     }
 }
-function connect($filename = null, $flags = SQLITE3_OPEN_READWRITE) {
+function connect() {
     static $sqlite = null;
-    if ($sqlite == null && $filename != null) {
-        $sqlite = new \SQLite3($filename, $flags);
+    if ($sqlite === null) {
+        $sqlite = new \SQLite3(DATABASE, SQLITE3_OPEN_READWRITE);
         $sqlite->busyTimeout(10000);
         register_shutdown_function(function($sqlite) { $sqlite->close(); }, $sqlite);
     }
     return $sqlite;
 }
-function prepare() {
-    $count = func_num_args();
-    if ($count === 0) return false;
-    if ($count === 1) return connect()->prepare(func_get_arg(0));
-    $params = func_get_args();
-    $query = array_shift($args);
+function prepare($query, $params = array()) {
     $st = connect()->prepare($query);
-    if ($st === false) return false;
-    return bindValues($st, $params);
-}
-function bindValues(\SQLite3Stmt $st, array $params) {
-    $count = count($params);
-    for($i = 0; $i < $count;) {
-        $param = $params[$i];
-        if (is_int($param)) {
+    if ($st === false || count($params) === 0) return $st;
+    $i = 0;
+    foreach($params as $param) {
+        if (is_int($param))
             $st->bindValue(++$i, $param, SQLITE3_INTEGER);
-        } elseif (is_bool($param)) {
-            $param = $param ? 1 : 0;
-            $st->bindValue(++$i, $param, SQLITE3_INTEGER);
-        } elseif (is_float($param)) {
+        elseif (is_bool($param))
+            $st->bindValue(++$i, $param ? 1 : 0, SQLITE3_INTEGER);
+        elseif (is_float($param))
             $st->bindValue(++$i, $param, SQLITE3_FLOAT);
-        } elseif (is_string($param)) {
+        elseif (is_string($param))
             $st->bindValue(++$i, $param, SQLITE3_TEXT);
-        } elseif ($param == null) {
+        elseif ($param === null)
             $st->bindValue(++$i, $param, SQLITE3_NULL);
-        } elseif ($param instanceof blob) {
+        elseif ($param instanceof blob)
             $st->bindValue(++$i, $param->data, $param->data == null ? SQLITE_NULL : SQLITE3_BLOB);
-        } elseif ($param instanceof \DateTime) {
-            $param = $param->format('Y-m-d\TH:i:s');
-            $st->bindValue(++$i, $param, SQLITE3_TEXT);
-        } else {
+        elseif ($param instanceof \DateTime)
+            $st->bindValue(++$i, $param->format('Y-m-d\TH:i:s'), SQLITE3_TEXT);
+        else
             $st->bindValue(++$i, $param);
-        }
     }
     return $st;
 }
-function exec() {
-    $count = func_num_args();
-    if ($count === 0) return false;
-    if ($count === 1) return connect()->exec(func_get_arg(0)) ? connect()->changes() : false;
-    $params = func_get_args();
-    $query = array_shift($params);
-    return execStatement($query, $params);
-}
-function execStatement($query, $params, &$id = false) {
-    $st = prepare($query);
-    if ($st === false) return false;
-    $rs = bindValues($st, $params)->execute();
-    if ($rs === false) {
-        $st->close();
-        return false;
-    }
-    if ($id !== false) $id = connect()->lastInsertRowID();
-    $changes = connect()->changes();
-    $rs->finalize();
-    $st->close();
-    return $changes;
-}
-function query() {
-    $params = func_get_args();
-    $count = count($params);
-    $filter = false;
-    if ($params[$count - 1] instanceof \Closure) {
-        $filter = array_pop($params);
-        $count--;
-    }
-    if ($count === 0) return false;
-    if ($count === 1) {
-        $rs = connect()->query($params[0]);
-        if ($rs === false) return false;
-        $rows = rows($rs, $filter);
-        $rs->finalize();
-        return $rows;        
-    }
-    $query = array_shift($params);
-    return queryStatement($query, $params, $filter);
-}
-function queryStatement($query, $params = array(), $filter = false) {
-    $st = prepare($query);
-    if ($st === false) return false;
-    $rs = bindValues($st, $params)->execute();
-    if ($rs === false) {
-        $st->close();
-        return false;
-    }
-    $rows = rows($rs, $filter);
-    $rs->finalize();
-    $st->close();
-    return $rows;
-}
-function singleValue() {
+function value() {
     $count = func_num_args();
     if ($count === 0) return false;
     if ($count === 1) return connect()->querySingle(func_get_arg(0), false);
     $params = func_get_args();
-    $query = array_shift($params);
-    return singleStatement($query, $params);
+    return single(array_shift($params), $params, 'v');
 }
-function singleRow() {
+function pair() {
+    if (func_num_args() === 0) return false;
+    $params = func_get_args();
+    return single(array_shift($params), $params, 'p');
+}
+function row() {
     $count = func_num_args();
     if ($count === 0) return false;
     if ($count === 1) return connect()->querySingle(func_get_arg(0), true);
     $params = func_get_args();
-    $query = array_shift($params);
-    return singleStatement($query, $params, true);
+    return single(array_shift($params), $params, 'r');
 }
-function singleStatement($query, $params, $entire_row = false) {
-    $st = prepare($query);
+function single($query, $params = array(), $type = 'r') {
+    $st = prepare($query, $params);
     if ($st === false) return false;
-    $rs = bindValues($st, $params)->execute();
+    $rs = $st->execute();
     if ($rs === false) {
         $st->close();
         return false;
     }
-    $row = $entire_row ? $rs->fetchArray(SQLITE3_ASSOC) : $rs->fetchArray(SQLITE3_NUM);
+    $row = $type === 'r' ? $rs->fetchArray(SQLITE3_ASSOC) : $rs->fetchArray(SQLITE3_NUM);
     $rs->finalize();
     $st->close();
-    if ($entire_row || $row === false) return $row;
-    return $row[0];
+    if ($type === 'v') return $row[0];
+    if ($type === 'p') return array($row[0] => $row[1]);
+    return $row;
 }
-function escape($value) {
-    return connect()->escapeString($value);
-}
-function rows($rs, $filter = false) {
-    $rows = array();
-    if ($filter === false) {
-        while ($row = $rs->fetchArray(SQLITE3_ASSOC)) $rows[] = $row;
-    } else {
-        while ($row = $rs->fetchArray(SQLITE3_ASSOC)) {
-            $frow = $filter($row, $rows);
-            if ($frow === null) continue;
-            $rows[] = $frow;
-        }
+function values() {
+    if (func_num_args() === 0) return false;
+    $params = func_get_args();
+    $count = count($params);
+    $filter = null;
+    if ($params[$count - 1] instanceof \Closure) {
+        if ($count === 1) return false;
+        $filter = array_pop($params);
     }
+    return multi(array_shift($params), $params, 'v', $filter);
+}
+function pairs() {
+    if (func_num_args() === 0) return false;
+    $params = func_get_args();
+    $count = count($params);
+    $filter = null;
+    if ($params[$count - 1] instanceof \Closure) {
+        if ($count === 1) return false;
+        $filter = array_pop($params);
+    }
+    return multi(array_shift($params), $params, 'p', $filter);
+}
+function rows() {
+    if (func_num_args() === 0) return false;
+    $params = func_get_args();
+    $count = count($params);
+    $filter = null;
+    if ($params[$count - 1] instanceof \Closure) {
+        if ($count === 1) return false;
+        $filter = array_pop($params);
+    }
+    return multi(array_shift($params), $params, 'r', $filter);
+}
+function multi($query, $params = array(), $type = 'r', $filter = null) {
+    $st = prepare($query, $params);
+    if ($st === false) return false;
+    $rs = $st->execute();
+    if ($rs === false) {
+        $st->close();
+        return false;
+    }
+    $fetch = $type === 'r' ? SQLITE3_ASSOC : SQLITE3_NUM;
+    $rows = array();
+    while ($row = $rs->fetchArray($fetch)) {
+        if ($filter !== null) $row = $filter($row, $rows);
+        if ($row === null) continue;
+        if ($type === 'v') $rows[] = $row[0];
+        elseif ($type === 'p') $rows[$row[0]] = $row[1];
+        else $rows[] = $row;
+    }
+    $rs->finalize();
+    $st->close();
     return $rows;
+}
+function insert($table, $values, &$id = false) {
+    $sql  = "INSERT INTO {$table} (" . implode(', ', array_keys($values)) . ') VALUES (' . substr(str_repeat(', ?', count($values)), 2) . ')';
+    return modify($sql, array_values($values), $id);
 }
 function update($table, $values, $id = null) {
     $sql  = "UPDATE {$table} SET " . implode(' = ?, ', array_keys($values));
@@ -160,9 +140,32 @@ function update($table, $values, $id = null) {
         $sql .= ' = ? WHERE id = ?';
         $values[] = $id;
     }
-    return execStatement($sql, $values);
+    return modify($sql, $values);
 }
-function insert($table, $values, &$id = false) {
-    $sql  = "INSERT INTO {$table} (" . implode(', ', array_keys($values)) . ') VALUES (' . substr(str_repeat(', ?', count($values)), 2) . ')';
-    return execStatement($sql, array_values($values), $id);
+function delete($table, $id = null) {
+    $sql  = "DELETE FROM {$table}";
+    if ($id === null) return connect()->exec(func_get_arg(0)) ? connect()->changes() : false;
+    $sql .= ' WHERE id = ?';
+    return modify($sql, array($id));
+}
+function exec() {
+    $count = func_num_args();
+    if ($count === 0) return false;
+    if ($count === 1) return connect()->exec(func_get_arg(0)) ? connect()->changes() : false;
+    $params = func_get_args();
+    return modify(array_shift($params), $params);
+}
+function modify($query, $params, &$id = null) {
+    $st = prepare($query, $params);
+    if ($st === false) return false;
+    $rs = $st->execute();
+    if ($rs === false) {
+        $st->close();
+        return false;
+    }
+    $id = connect()->lastInsertRowID();
+    $changes = connect()->changes();
+    $rs->finalize();
+    $st->close();
+    return $changes;
 }
