@@ -6,11 +6,11 @@ class blob {
         $this->data = $data;
     }
 }
-function connect() {
+function connect($filename = null, $flags = SQLITE3_OPEN_READWRITE, $busyTimeout = 10000) {
     static $sqlite = null;
-    if ($sqlite === null) {
-        $sqlite = new \SQLite3(DATABASE, SQLITE3_OPEN_READWRITE);
-        $sqlite->busyTimeout(10000);
+    if ($sqlite === null && $filename !== null) {
+        $sqlite = new \SQLite3($filename, $flags);
+        $sqlite->busyTimeout($busyTimeout);
         register_shutdown_function(function($sqlite) { $sqlite->close(); }, $sqlite);
     }
     return $sqlite;
