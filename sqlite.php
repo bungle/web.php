@@ -31,7 +31,7 @@ function prepare($query, $params = array()) {
         elseif ($param === null)
             $st->bindValue(++$i, $param, SQLITE3_NULL);
         elseif ($param instanceof blob)
-            $st->bindValue(++$i, $param->data, $param->data == null ? SQLITE_NULL : SQLITE3_BLOB);
+            $st->bindValue(++$i, $param->data, $param->data === null ? SQLITE_NULL : SQLITE3_BLOB);
         elseif ($param instanceof \DateTime)
             $st->bindValue(++$i, $param->format('Y-m-d\TH:i:s'), SQLITE3_TEXT);
         else
