@@ -11,7 +11,11 @@
 
 ## Installation
 
-Download `web.php` (for logging download `log.php`, and for password hashing download `password.php`).  
+Download `web.php` (for logging download `log.php`, and for password hashing download `password.php`).
+
+There are also libraries for Tumblr (`tumblr.php`), OpenID (`openid.php`), SQLite 3 (`sqlite.php`),
+and Postmark (`postmark.php`). New libraries are added now and then. These libraries follow the
+minimalistic approach of `web.php`.
 
 ### Modify .htaccess
 
@@ -125,7 +129,7 @@ Forwards need to be registered before using them.
 
 ### Redirects
 
-Use `redirect($url, $code = 301, $die = true)` to redirect the user in other page.
+Use `redirect($url, $code = 302, $die = true)` to redirect the user in other page.
    
     <?php
     session_start();
@@ -439,6 +443,8 @@ You could also try out NoSQL DBs like:
 * [MongoDB](http://www.mongodb.org/)
 
 #### How do I run the tests?
+
+Right now the tests are work in progress.
 
     cd tests
     pear run-tests
