@@ -444,6 +444,8 @@ You could also try out NoSQL DBs like:
 
 #### How do I run the tests?
 
+Right now the tests are work in progress.
+
     cd tests
     pear run-tests
 
