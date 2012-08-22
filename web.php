@@ -128,7 +128,7 @@ function url($url = null, $abs = false) {
     if (strpos($url, '~/') === 0) return $root . $base . '/' . substr($url, 2);
     return strpos($url, '/') === 0 ? $root . $url : $root . $path . '/' . $url;
 }
-function redirect($url, $code = 301, $die = true) {
+function redirect($url, $code = 302, $die = true) {
     header('Location: ' . url($url, true), true, $code);
     if ($die) die;
 }
@@ -320,7 +320,8 @@ function slug($str, $delimiter = '-', $width = null) {
 }
 function date_from_format($format = 'Y-m-d', $timezone = null) {
     return function($value) use ($format, $timezone) {
-        return $timezone instanceof DateTimeZone ? date_create_from_format($format, $value, $timezone) : date_create_from_format($format, $value);
+        $date = $timezone instanceof DateTimeZone ? date_create_from_format($format, $value, $timezone) : date_create_from_format($format, $value);
+        return $date !== false ? $date : null;
     };
 }
 // Form

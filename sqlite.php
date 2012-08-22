@@ -128,25 +128,37 @@ function multi($query, $params = array(), $type = 'r', $filter = null) {
     return $rows;
 }
 function insert($table, $values, &$id = false) {
-    $sql  = "INSERT INTO {$table} (" . implode(', ', array_keys($values)) . ') VALUES (' . substr(str_repeat(', ?', count($values)), 2) . ')';
+    $sql = "INSERT INTO {$table} (" . implode(', ', array_keys($values)) . ') VALUES (' . substr(str_repeat(', ?', count($values)), 2) . ')';
     return modify($sql, array_values($values), $id);
 }
-function update($table, $values, $id = null) {
-    $sql  = "UPDATE {$table} SET " . implode(' = ?, ', array_keys($values));
+function update($table, $values, $where = null) {
+    $sql = "UPDATE {$table} SET " . implode(' = ?, ', array_keys($values)) . ' = ?';
     $values = array_values($values);
-    if ($id == null) {
-        $sql .= ' = ?';
-    } else {
-        $sql .= ' = ? WHERE id = ?';
-        $values[] = $id;
+    if (is_array($where)) {
+        $sql .= ' WHERE ';
+        $sql .= implode(' = ? AND ', array_keys($where)) . ' = ?';
+        $values = array_merge($values, array_values($where));
+    } elseif (is_int($where)) {
+        $sql .= ' WHERE id = ?';
+        $values[] = $where;
+    } elseif (is_string($where)) {
+        $sql .= " WHERE {$where}";
     }
     return modify($sql, $values);
 }
-function delete($table, $id = null) {
-    $sql  = "DELETE FROM {$table}";
-    if ($id === null) return connect()->exec(func_get_arg(0)) ? connect()->changes() : false;
-    $sql .= ' WHERE id = ?';
-    return modify($sql, array($id));
+function delete($table, $where = null) {
+    $sql = "DELETE FROM {$table}";
+    if (is_array($where)) {
+        $sql .= ' WHERE ';
+        $sql .= implode(' = ? AND ', array_keys($where)) . ' = ?';        
+        return modify($sql, $where);
+    } elseif (is_int($where)) {
+        $sql .= ' WHERE id = ?';
+        return modify($sql, array($where));
+    } elseif (is_string($where)) {
+        $sql .= " WHERE {$where}";
+    }
+    return connect()->exec($sql) !== false ? connect()->changes() : false;
 }
 function exec() {
     $count = func_num_args();
