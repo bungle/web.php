@@ -91,6 +91,8 @@ the same as `%[^/]` (everything until or except `/`). Please read the documentat
         }
     }
 
+#### Content Negotiation
+
 ### POST Routes
 
 Use `post($path, $func)` to route HTTP POST requests. See the *GET Routes* examples.
@@ -407,13 +409,13 @@ You can actually route to `files`, `functions`, `static class methods`, and `obj
     get('/', 'Clazz::staticMethod');   // Executes a static method
     get('/', 'Clazz->instanceMethod'); // Instantiates new object from class 'Clazz' using parameterless constructor
 
-#### web.php pollutes global root namespace!
+#### web.php pollutes global the root namespace!
 
-Yes, that's true. web.php could be wrapped to namespace just by making this declaration on top of the `web.php`
+Yes, that's true. `web.php` could be wrapped to namespace just by making this declaration on top of the `web.php`:
 
     namespace web;
 
-and then just instead of calling for example `get` you would call `web\get`. The reason we didn't choose to do that is
+... and then just instead of calling for example `get` you would call `web\get`. The reason we didn't choose to do that is
 just that we like using the shorter versions for these functions. We welcome you to do a fork of `web.php`, if you see
 this as an issue. And we are also open for suggestions.
 
