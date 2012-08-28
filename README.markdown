@@ -409,7 +409,7 @@ You can actually route to `files`, `functions`, `static class methods`, and `obj
     get('/', 'Clazz::staticMethod');   // Executes a static method
     get('/', 'Clazz->instanceMethod'); // Instantiates new object from class 'Clazz' using parameterless constructor
 
-#### web.php pollutes global the root namespace!
+#### web.php pollutes the global root namespace!
 
 Yes, that's true. `web.php` could be wrapped to namespace just by making this declaration on top of the `web.php`:
 
