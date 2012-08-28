@@ -55,18 +55,18 @@ or:
 
     <?php
     get('/posts', function() {
-        die(json_encode(array(
-            array(
+        die(json_encode([
+            [
                 'id'    => 1,
                 'title' => 'Trying out web.php',
                 'body'  => 'Lorem...' 
-            ),
-            array(
+            ],
+            [
                 'id'    => 2,
                 'title' => 'I'm really starting to like web.php',
                 'body'  => 'Lorem...' 
-            )
-        )));
+            ]
+        ]));
     });
 
 #### Parameterized Routes
@@ -78,16 +78,16 @@ the same as `%[^/]` (everything until or except `/`). Please read the documentat
     <?php
     get('/posts/%d', function($id) {
         switch ($id) {
-            case 1: die(json_encode(array(
+            case 1: die(json_encode([
                     'id'    => 1,
                     'title' => 'Trying out web.php',
                     'body'  => 'Lorem...' 
-                )));
-            case 2: die(json_encode(array(
+                ]));
+            case 2: die(json_encode([
                     'id'    => 2,
                     'title' => 'I'm really starting to like web.php',
                     'body'  => 'Lorem...' 
-                )));
+                ]));
         }
     }
 
@@ -292,7 +292,7 @@ TBD (see: [Facebook's BigPipe](https://www.facebook.com/note.php?note_id=3894140
 Use `filter()` to filter a variable:
 
     <?php
-    $email = 'root@sunet.se';
+    $email = 'john@doe.net';
     echo filter($email, 'email') ? 'Valid Email' : 'Invalid Email';
 
 #### Built-in Filters and Validators
