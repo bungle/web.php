@@ -17,14 +17,28 @@ There are also libraries for Tumblr (`tumblr.php`), OpenID (`openid.php`), SQLit
 and Postmark (`postmark.php`). New libraries are added now and then. These libraries follow the
 minimalistic approach of `web.php`.
 
-### Modify .htaccess
+### On Apache Modify .htaccess
 
     <IfModule mod_rewrite.c>
         RewriteCond %{REQUEST_FILENAME} !-f
     	RewriteRule ^ index.php [L]
     </IfModule>
 
-If you are using something other than `Apache` with `mod_rewrite`, Google for instructions.
+### On Nginx with PHP-FPM
+
+    server {
+        location / {
+            try_files   $uri $uri/ /index.php?$query_string;
+        }
+        location ~* \.php$ {
+            fastcgi_pass    127.0.0.1:9000;
+            fastcgi_index   index.php;
+            fastcgi_param   SCRIPT_FILENAME   $document_root$fastcgi_script_name;
+            include         fastcgi_params;
+        }
+    }
+
+If you are using something other than `Apache` with `mod_rewrite` or `nginx`, Google for instructions.
 
 ### Create `index.php` Bootstrap File
 
