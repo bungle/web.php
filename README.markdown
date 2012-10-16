@@ -28,7 +28,7 @@ minimalistic approach of `web.php`.
 
     server {
         location / {
-            try_files       $uri $uri/ /index.php?$args;
+            try_files                 $uri $uri/ /index.php?$args;
         }
         location = /index.php {
             try_files $uri = 404;
