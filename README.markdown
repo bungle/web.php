@@ -28,13 +28,15 @@ minimalistic approach of `web.php`.
 
     server {
         location / {
-            try_files       $uri $uri/ /index.php?$query_string;
+            try_files       $uri $uri/ /index.php?$args;
         }
         location = /index.php {
-            fastcgi_pass    127.0.0.1:9000;
-            fastcgi_index   index.php;
-            fastcgi_param   SCRIPT_FILENAME   $document_root$fastcgi_script_name;
-            include         fastcgi_params;
+            try_files $uri = 404;
+            fastcgi_pass             127.0.0.1:9000;
+            fastcgi_index            index.php;
+            fastcgi_param            SCRIPT_FILENAME   $document_root$fastcgi_script_name;
+            fastcgi_split_path_info  ^(.+\.php)(/.+)$;
+            include fastcgi_params;
         }
     }
 
