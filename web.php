@@ -311,12 +311,11 @@ function specialchars($quote = ENT_NOQUOTES, $charset = 'UTF-8', $double = true)
         return htmlspecialchars($value, $quote, $charset, $double);
     };
 }
-function slug($str, $delimiter = '-', $width = null) {
-    if ($width != null) $str = titlewrap($str, $width, '');
+function slug($str, $delimiter = '-') {
+    $str = preg_replace('/[^\pL\pNd]+/u', $delimiter, $str);
     $str = iconv('UTF-8', 'ASCII//TRANSLIT', $str);
-    $str = preg_replace('#[^a-z0-9/_|+\s-]#i', '', $str);
-    $str = strtolower(trim($str, '/_|+ -'));
-    return preg_replace('#[/_|+\s-]+#', $delimiter, $str);
+    $str = preg_replace('/[^\w]+/', $delimiter, $str);
+    return strtolower(trim($str, $delimiter));
 }
 function date_from_format($format = 'Y-m-d', $timezone = null) {
     return function($value) use ($format, $timezone) {
