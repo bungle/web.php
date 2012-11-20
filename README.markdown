@@ -156,7 +156,7 @@ Use `redirect($url, $code = 302, $die = true)` to redirect the user in other pag
     });
 
     post('/', function() {
-        flash('redirected', true);
+        flash('redirected');
         redirect('~/');
     });
 
