@@ -172,6 +172,11 @@ Use `redirect($url, $code = 302, $die = true)` to redirect the user in other pag
         redirect('~/');
     });
 
+### Flash Variables
+
+Use `flash($name, $value = true, $hops = 1)` to set short living session variables.
+`$hops` argument tells us how long (for how many request) should we keep the session variable.
+
 ## Views, Layouts, Blocks, Partials, and Pagelets
 
 `web.php` has support for views, and layouts (or even sub-layouts).
