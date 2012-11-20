@@ -132,7 +132,7 @@ function redirect($url, $code = 302, $die = true) {
     header('Location: ' . url($url, true), true, $code);
     if ($die) die;
 }
-function flash($name, $value, $hops = 1) {
+function flash($name, $value = true, $hops = 1) {
     $_SESSION[$name] = $value;
     if (!isset($_SESSION['web.php:flash']))
         $_SESSION['web.php:flash'] = array($name => $hops);
@@ -191,7 +191,7 @@ class view {
 view::$globals = new stdClass;
 function block(&$block = false) {
     if ($block === false) return ob_end_clean();
-    ob_start(function($buffer) use (&$block) { $block = $buffer; });
+    return ob_start(function($buffer) use (&$block) { $block = $buffer; });
 }
 function partial($file, $args = null) {
     ob_start();
