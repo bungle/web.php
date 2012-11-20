@@ -4,7 +4,9 @@ function get($path, $func) {
     return $_SERVER['REQUEST_METHOD'] === 'GET' ? route($path, $func) : false;
 }
 function post($path, $func) {
-    return $_SERVER['REQUEST_METHOD'] === 'POST' ? route($path, $func) : false;
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') return false;
+    if (isset($_POST['_method']) && $_POST['_method'] !== 'POST') return false;
+    return route($path, $func);
 }
 function put($path, $func) {
     return $_SERVER['REQUEST_METHOD'] === 'PUT' || (isset($_POST['_method']) && $_POST['_method'] === 'PUT') ? route($path, $func) : false;
