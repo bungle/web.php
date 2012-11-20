@@ -486,6 +486,7 @@ You could try these:
 You could also try out NoSQL DBs like:
 
 * [Redis](http://redis.io/)
+* [RethinkDB](http://www.rethinkdb.com/)
 * [MongoDB](http://www.mongodb.org/)
 
 #### How do I run the tests?
