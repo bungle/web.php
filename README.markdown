@@ -160,6 +160,7 @@ Forwards need to be registered before using them.
 ### Redirects
 
 Use `redirect($url, $code = 302, $die = true)` to redirect the user in other page.
+Use `$code` value of `301` for permanent redirects.
    
     <?php
     session_start();
