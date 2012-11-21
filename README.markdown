@@ -136,9 +136,9 @@ You can also use `accept` function like this:
     <?php
     get('/ping', function() {
         accept(array(
-            'text/html'             => 'pong.html',
-            'application/xhtml+xml' => 'pong.html',
-            'application/xml'       => 'pong.xml'
+            'text/html'        => 'pong.html',
+            'application/json' => 'pong.json',
+            'application/xml'  => 'pong.xml'
         ));
     });
 
