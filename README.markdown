@@ -109,6 +109,27 @@ the same as `%[^/]` (everything until or except `/`). Please read the documentat
 
 #### Content Negotiation
 
+You can send different content based on client's Accept HTTP Header:
+
+    get('/ping', accept('text/html', 'application/xhtml+xml', function() {
+    $html =<<<'HTML'
+    <html>
+        <body>
+            PONG
+        </body>
+    </html>
+    HTML;
+    die($html);
+    }));
+
+    get('/ping', accept('application/xml', function() {
+    $xml =<<<'XML'
+    <?xml version="1.0" encoding="UTF-8" ?>
+    <pong />
+    XML;
+    die($xml);
+    }));
+
 ### POST Routes
 
 Use `post($path, $func)` to route HTTP POST requests. See the *GET Routes* examples.
