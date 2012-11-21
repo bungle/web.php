@@ -111,6 +111,7 @@ the same as `%[^/]` (everything until or except `/`). Please read the documentat
 
 You can send different content based on client's Accept HTTP Header:
 
+    <?php
     get('/ping', accept('text/html', 'application/xhtml+xml', function() {
     $html =<<<'HTML'
     <html>
@@ -121,7 +122,7 @@ You can send different content based on client's Accept HTTP Header:
     HTML;
     die($html);
     }));
-
+    
     get('/ping', accept('application/xml', function() {
     $xml =<<<'XML'
     <?xml version="1.0" encoding="UTF-8" ?>
