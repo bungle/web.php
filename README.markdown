@@ -131,6 +131,27 @@ You can send different content based on client's Accept HTTP Header:
     die($xml);
     }));
 
+You can also use `accept` function like this:
+
+    <?php
+    get('/ping', function() {
+        accept(array(
+            'text/html'             => 'pong.html',
+            'application/xhtml+xml' => 'pong.html',
+            'application/xml'       => 'pong.xml'
+        ));
+    });
+
+These work too:
+
+    <?php
+    accept(array(
+        'text/html'        => 'phpinfo',
+        'application/xml'  => 'XML::xml',
+        'application/json' => 'JSON->json',
+        'text/plain'       => function() { die('<html>'); }
+    ));
+
 ### POST Routes
 
 Use `post($path, $func)` to route HTTP POST requests. See the *GET Routes* examples.
