@@ -15,6 +15,7 @@ function delete($path, $func) {
     return $_SERVER['REQUEST_METHOD'] === 'DELETE' || (isset($_POST['_method']) && $_POST['_method'] === 'DELETE') ? route($path, $func) : false;
 }
 function route($path, $func) {
+    if ($func === false) return false;
     static $url = null;
     if ($url == null) {
         $url = parse_url($_SERVER['SCRIPT_NAME'], PHP_URL_PATH);
@@ -37,6 +38,8 @@ function call($func, array $args = array()) {
             list($clazz, $method) = explode('->', $func, 2);
             $func = array(new $clazz, $method);
         }
+    } elseif (is_bool($func)) {
+        return $func;
     }
     return call_user_func_array($func, $args);
 }
@@ -48,6 +51,24 @@ function forward($name, $func = null) {
     }
     if (isset($routes[$name])) return call($routes[$name]);
     trigger_error(sprintf('Invalid forward: %s', $name), E_USER_WARNING);
+}
+function accept() {
+    $rslt = false;
+    if (func_num_args() === 1) {
+        $hash = func_get_arg(0);
+        $ctps = array_keys($hash);
+        $type = http_negotiate_content_type($ctps, $rslt);
+        if ($rslt == false) return false;
+        header("Content-type: ${type}");
+        call($hash[$type]);
+        return true;
+    }
+    $ctps = func_get_args();
+    $func = array_pop($ctps);
+    $type = http_negotiate_content_type($ctps, $rslt);
+    if ($rslt == false) return false;
+    header("Content-type: ${type}");
+    return $func;
 }
 function status($code) {
     switch ($code) {
@@ -201,7 +222,7 @@ function partial($file, $args = null) {
     include $file;
     return ob_get_clean();
 }
-// Not yeat finished
+// Not yet finished
 // see: https://www.facebook.com/note.php?note_id=389414033919
 function pagelets($id = null, $func = null) {
     static $pagelets = array();
@@ -354,7 +375,7 @@ class form {
             if ($field instanceof field && $field->valid && ($args === false || in_array($field->name, $args, true)))
                 $data[$field->name] = $field->value;
         return $data;
-    }    
+    }
 }
 class field {
     public $name, $value, $original, $valid;
