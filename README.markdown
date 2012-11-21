@@ -131,6 +131,11 @@ You can send different content based on client's Accept HTTP Header:
     die($xml);
     }));
 
+    // Parameterized Routes with Content Negotiation:
+    get('/plus/%d/%d', accept('application/html', function($a, $b) {
+        die('<html><body>' . ($a + $b) . '</body></html>');
+    }));
+
 You can also use `accept` function like this:
 
     <?php
