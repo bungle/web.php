@@ -149,7 +149,7 @@ These work too:
         'text/html'        => 'phpinfo',
         'application/xml'  => 'XML::xml',
         'application/json' => 'JSON->json',
-        'text/plain'       => function() { die('<html>'); }
+        'text/plain'       => function() { die('Hello, World!'); }
     ));
 
 ### POST Routes
