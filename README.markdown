@@ -142,7 +142,7 @@ You can also use `accept` function like this:
         ));
     });
 
-These work too:
+These work too (as described [here](#is-routing-to-anonymous-function-the-only-option)):
 
     <?php
     accept(array(
