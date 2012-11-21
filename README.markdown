@@ -139,7 +139,7 @@ You can also use `accept` function like this:
             'text/html'        => 'pong.html',
             'application/json' => 'pong.json',
             'application/xml'  => 'pong.xml'
-        ));
+        )) and die;
     });
 
 These work too (as described [here](#is-routing-to-anonymous-function-the-only-option)):
