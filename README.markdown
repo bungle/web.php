@@ -117,7 +117,7 @@ Use `post($path, $func)` to route HTTP POST requests. See the *GET Routes* examp
 
 Use `put($path, $func)` to route HTTP PUT requests. See the *GET Routes* examples.
 
-You can send delete request with POST method by sending `_method` parameter that has a value of `PUT`:
+You can send PUT requests with POST method by sending `_method` parameter that has a value of `PUT`:
 
     <form method="post">
         <input type="hidden" name="_method" value="PUT">
@@ -127,7 +127,7 @@ You can send delete request with POST method by sending `_method` parameter that
 
 Use `delete($path, $func)` to route HTTP DELETE requests. See the *GET Routes* examples.
 
-You can send delete request with POST method by sending `_method` parameter that has a value of `DELETE`:
+You can send DELETE requests with POST method by sending `_method` parameter that has a value of `DELETE`:
 
     <form method="post">
         <input type="hidden" name="_method" value="DELETE">
