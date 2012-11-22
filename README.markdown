@@ -472,13 +472,15 @@ Note: You can also have your filter functions namespaced.
 
 TBD
 
-## Other Features
-### Sending Files
-#### X-Sendfile Support
-### Logging with `log.php`
-#### Logging with ChromePHP
-#### Extending the Logger
-### Password Hashing & Checking with `password.php`
+## Sending Files
+### X-Sendfile Support
+## Logging with `log.php`
+### Logging with ChromePHP
+### Logging with System Logger
+### Extending the Logger
+## Password Hashing & Checking with `password.php`
+## Database Access
+### Using SQLite with `sqlite.php`
 
 ## FAQ
 
