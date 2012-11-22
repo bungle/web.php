@@ -157,9 +157,7 @@ You can send different content based on client's Accept HTTP Header:
     get('/ping', accept('text/html', 'application/xhtml+xml', function() {
     $html =<<<'HTML'
     <html>
-        <body>
-            PONG
-        </body>
+        <body>PONG</body>
     </html>
     HTML;
     die($html);
