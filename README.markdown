@@ -9,6 +9,14 @@
         die('Hello, World!');
     });
 
+## Table of Contents
+
+* [Installation](#installation)
+* [Routing](#routing)
+* [Forwards and Redirects](#forwards-and-redirects)
+* [Views, Layouts, Blocks, Partials, and Pagelets](#views-layouts-blocks-partials-and-pagelets)
+
+
 ## Installation
 
 Download `web.php` (for logging download `log.php`, and for password hashing download `password.php`).
@@ -107,7 +115,35 @@ the same as `%[^/]` (everything until or except `/`). Please read the documentat
         }
     }
 
-#### Content Negotiation
+### POST Routes
+
+Use `post($path, $func)` to route HTTP POST requests. See the *GET Routes* examples.
+
+### PUT Routes
+
+Use `put($path, $func)` to route HTTP PUT requests. See the *GET Routes* examples.
+
+You can send PUT requests with POST method by sending `_method` parameter that has a value of `PUT`:
+
+    <form method="post">
+        <input type="hidden" name="_method" value="PUT">
+    </form>
+
+### DELETE Routes
+
+Use `delete($path, $func)` to route HTTP DELETE requests. See the *GET Routes* examples.
+
+You can send DELETE requests with POST method by sending `_method` parameter that has a value of `DELETE`:
+
+    <form method="post">
+        <input type="hidden" name="_method" value="DELETE">
+    </form>
+
+### Routing All Types of Requests
+
+Use `route($path, $func)` to route all HTTP requests. See the *GET Routes* examples.
+
+## Content Negotiation
 
 You can send different content based on client's Accept HTTP Header:
 
@@ -156,34 +192,6 @@ These work too (as described [here](#is-routing-to-anonymous-function-the-only-o
         'application/json' => 'JSON->json',
         'text/plain'       => function() { die('Hello, World!'); }
     ));
-
-### POST Routes
-
-Use `post($path, $func)` to route HTTP POST requests. See the *GET Routes* examples.
-
-### PUT Routes
-
-Use `put($path, $func)` to route HTTP PUT requests. See the *GET Routes* examples.
-
-You can send PUT requests with POST method by sending `_method` parameter that has a value of `PUT`:
-
-    <form method="post">
-        <input type="hidden" name="_method" value="PUT">
-    </form>
-
-### DELETE Routes
-
-Use `delete($path, $func)` to route HTTP DELETE requests. See the *GET Routes* examples.
-
-You can send DELETE requests with POST method by sending `_method` parameter that has a value of `DELETE`:
-
-    <form method="post">
-        <input type="hidden" name="_method" value="DELETE">
-    </form>
-
-### Routing All Types of Requests
-
-Use `route($path, $func)` to route all HTTP requests. See the *GET Routes* examples.
 
 ## Forwards and Redirects
 
@@ -367,7 +375,7 @@ TBD
 
 TBD (see: [Facebook's BigPipe](https://www.facebook.com/note.php?note_id=389414033919)).
 
-## Filters and Forms (including validation)
+## Filters and Forms, and Input Validation
 
 ### Filtering and Validating Variables
 
