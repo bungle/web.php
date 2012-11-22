@@ -180,22 +180,22 @@ You can also use `accept` function like this:
 
     <?php
     get('/ping', function() {
-        accept(array(
+        accept([
             'text/html'        => 'pong.html',
             'application/json' => 'pong.json',
             'application/xml'  => 'pong.xml'
-        )) and die;
+        ]) and die;
     });
 
 These work too (as described [here](#is-routing-to-anonymous-function-the-only-option)):
 
     <?php
-    accept(array(
+    accept([
         'text/html'        => 'phpinfo',
         'application/xml'  => 'XML::xml',
         'application/json' => 'JSON->json',
         'text/plain'       => function() { die('Hello, World!'); }
-    ));
+    ]);
 
 ## Forwards and Redirects
 
