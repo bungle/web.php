@@ -16,7 +16,12 @@
 * [Content Negotiation](#content-negotiation)
 * [Forwards and Redirects](#forwards-and-redirects)
 * [Views, Layouts, Blocks, Partials, and Pagelets](#views-layouts-blocks-partials-and-pagelets)
-
+* [Filters, Forms, and Input Validation](#filters-forms-and-input-validation)
+* [Sending Files](#sending-files)
+* [Logging with log.php](#logging-with-logphp)
+* [Password Hashing & Checking with password.php](#password-hashing--checking-with-passwordphp)
+* [FAQ](#faq)
+* [License](#license)
 
 ## Installation
 
