@@ -13,6 +13,7 @@
 
 * [Installation](#installation)
 * [Routing](#routing)
+* [Content Negotiation](#content-negotiation)
 * [Forwards and Redirects](#forwards-and-redirects)
 * [Views, Layouts, Blocks, Partials, and Pagelets](#views-layouts-blocks-partials-and-pagelets)
 
@@ -375,7 +376,7 @@ TBD
 
 TBD (see: [Facebook's BigPipe](https://www.facebook.com/note.php?note_id=389414033919)).
 
-## Filters and Forms, and Input Validation
+## Filters, Forms, and Input Validation
 
 ### Filtering and Validating Variables
 
