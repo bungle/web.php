@@ -529,6 +529,17 @@ If you want to run cleanup code, please try to build your code so that cleanup r
 It depends on what you compare it to. But if you compare it to other PHP frameworks, web.php will surely stand the
 competition. If you know how web.php could be made faster, please let us know it too!
 
+#### Why web.php is not object oriented?
+
+We think that PHP enables us to do multiparadigm programming. We always try to evaluate different approaches,
+when we decide to add features, or when we are refactoring web.php. Sometimes the procedural approach wins
+(most of the web.php's core), and sometimes object oriented way of doing things stands out the best
+(e.g. views, and forms). PHP also allows us to mix procedural, and object oriented programming with functional
+programming. We tend to write the client code first, so that we can see how it looks like, before we go actually
+implement the thing. In that process we usually try different paradigms. It's might come to taste, but we tend
+to like procedural / functional way of doing things cleaner (less abstraction and encapsulation, but also more
+to the point solutions with less code).
+
 #### What is the philosophy behind web.php?
 
 If there is any, this comes to close:
