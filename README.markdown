@@ -536,9 +536,11 @@ when we decide to add features, or when we are refactoring web.php. Sometimes th
 (most of the web.php's core), and sometimes object oriented way of doing things stands out the best
 (e.g. views, and forms). PHP also allows us to mix procedural, and object oriented programming with functional
 programming. We tend to write the client code first, so that we can see how it looks like, before we go actually
-implement the thing. In that process we usually try different paradigms. It's might come to taste, but we tend
+implementing the thing. In that process we usually try different paradigms. It's might come to taste, but we tend
 to like procedural / functional way of doing things cleaner (less abstraction and encapsulation, but also more
-to the point solutions with less code).
+to the point solutions with less code). So basically we do use object oriented as we see it fit, but not exclusively.
+
+Anthony Ferrara has said this better: [Paradigm Soup on YouTube](http://www.youtube.com/watch?v=CV4vPsEizJM)
 
 #### What is the philosophy behind web.php?
 
