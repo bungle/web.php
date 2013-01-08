@@ -1,17 +1,30 @@
 <?php
 namespace sqlite;
+
 class blob {
     public $data;
     function __construct($data = null) {
         $this->data = $data;
     }
 }
-function connect($filename = null, $flags = SQLITE3_OPEN_READWRITE, $busyTimeout = 10000) {
+function blob($data) {
+    return new blob($data);
+}
+function connect($filename = null, $flags = SQLITE3_OPEN_READWRITE, $busyTimeout = null) {
     static $sqlite = null;
-    if ($sqlite === null && $filename !== null) {
+    if ($sqlite !== null) return $sqlite;
+    if ($filename !== null) {
         $sqlite = new \SQLite3($filename, $flags);
+    } elseif (defined('SQLITE3_DATABASE')) {
+        $sqlite = new \SQLite3(SQLITE3_DATABASE, $flags);
+    } else {
+        return null;
+    }
+    register_shutdown_function(function($sqlite) { $sqlite->close(); }, $sqlite);
+    if ($busyTimeout !== null) {
         $sqlite->busyTimeout($busyTimeout);
-        register_shutdown_function(function($sqlite) { $sqlite->close(); }, $sqlite);
+    } elseif (defined('SQLITE3_BUSY_TIMEOUT')) {
+        $sqlite->busyTimeout(SQLITE3_BUSY_TIMEOUT);
     }
     return $sqlite;
 }
@@ -31,7 +44,7 @@ function prepare($query, $params = array()) {
         elseif ($param === null)
             $st->bindValue(++$i, $param, SQLITE3_NULL);
         elseif ($param instanceof blob)
-            $st->bindValue(++$i, $param->data, $param->data === null ? SQLITE_NULL : SQLITE3_BLOB);
+            $st->bindValue(++$i, $param->data, $param->data === null ? SQLITE3_NULL : SQLITE3_BLOB);
         elseif ($param instanceof \DateTime)
             $st->bindValue(++$i, $param->format('Y-m-d\TH:i:s'), SQLITE3_TEXT);
         else
@@ -131,34 +144,52 @@ function insert($table, $values, &$id = false) {
     $sql = "INSERT INTO {$table} (" . implode(', ', array_keys($values)) . ') VALUES (' . substr(str_repeat(', ?', count($values)), 2) . ')';
     return modify($sql, array_values($values), $id);
 }
-function update($table, $values, $where = null) {
+function update() {
+    $count = func_num_args();
+    if ($count < 2) return false;
+    $args = func_get_args();
+    $table = array_shift($args);
+    $values = array_shift($args);
     $sql = "UPDATE {$table} SET " . implode(' = ?, ', array_keys($values)) . ' = ?';
     $values = array_values($values);
+    if ($count === 2) return modify($sql, $values);
+    $where = array_shift($args);
     if (is_array($where)) {
         $sql .= ' WHERE ';
         $sql .= implode(' = ? AND ', array_keys($where)) . ' = ?';
-        $values = array_merge($values, array_values($where));
+        return modify($sql, array_merge($values, array_values($where)));
     } elseif (is_int($where)) {
         $sql .= ' WHERE id = ?';
         $values[] = $where;
+        return modify($sql, $values);
     } elseif (is_string($where)) {
         $sql .= " WHERE {$where}";
+        if ($count > 3) $values = array_merge($values, $args);
+        return modify($sql, $values);
     }
-    return modify($sql, $values);
+    return false;
 }
-function delete($table, $where = null) {
+function delete() {
+    $count = func_num_args();
+    if ($count === 0) return false;
+    $args = func_get_args();
+    $table = array_shift($args);
     $sql = "DELETE FROM {$table}";
+    if ($count === 1) return connect()->exec($sql) !== false ? connect()->changes() : false;
+    $where = array_shift($args);
     if (is_array($where)) {
         $sql .= ' WHERE ';
-        $sql .= implode(' = ? AND ', array_keys($where)) . ' = ?';        
-        return modify($sql, $where);
+        $sql .= implode(' = ? AND ', array_keys($where)) . ' = ?';
+        return modify($sql, array_values($where));
     } elseif (is_int($where)) {
         $sql .= ' WHERE id = ?';
         return modify($sql, array($where));
     } elseif (is_string($where)) {
         $sql .= " WHERE {$where}";
+        if ($count === 2) return connect()->exec($sql) !== false ? connect()->changes() : false;
+        return modify($sql, $args);
     }
-    return connect()->exec($sql) !== false ? connect()->changes() : false;
+    return false;
 }
 function exec() {
     $count = func_num_args();

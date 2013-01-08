@@ -162,26 +162,27 @@ function flash($name, $value = true, $hops = 1) {
     else
         $_SESSION['web.php:flash'][$name] = $hops;
 }
-function sendfile($path, $name = null, $mime = null, $die = true) {
+function sendfile($path, $name = null, $disposition = 'inline', $mime = null, $die = true) {
+    $filename = $name === null ? basename($path) : basename($name);
     if ($mime == null) {
         $fnfo = finfo_open(FILEINFO_MIME_TYPE);
         $fmim = finfo_file($fnfo, $path);
         finfo_close($fnfo);
         $mime = $fmim === false ? 'application/octet-stream' : $fmim;
     }
-    if ($name == null) $name = basename($path);
-        header("Content-Type: $mime");
-        header("Content-Disposition: attachment; filename=\"$name\"");
-        if (defined('XSENDFILE_HEADER')) {
-            header(XSENDFILE_HEADER . ': ' . $path);
+    header("Content-Type: {$mime}");
+    header("Content-Disposition: {$disposition}; filename=\"{$filename}\"");
+    if (defined('XSENDFILE_HEADER')) {
+        if (defined('XSENDFILE_PATH')) {
+            header(XSENDFILE_HEADER . ': ' . XSENDFILE_PATH . $path);
         } else {
-            header('Content-Description: File Transfer');
-            header('Content-Transfer-Encoding: binary');
-            header('Content-Length: ' . filesize($path));
-            header('Expires: 0');
-            header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-            header('Pragma: public');
-            readfile($path);
+            header(XSENDFILE_HEADER . ': ' . $path);
+        }
+    } else {
+        header('Content-Description: File Transfer');
+        header('Content-Transfer-Encoding: binary');
+        header('Content-Length: ' . filesize($path));
+        readfile($path);
     }
     if ($die) die;
 }
@@ -219,7 +220,7 @@ function block(&$block = false) {
 function partial($file, $args = null) {
     ob_start();
     if ($args !== null) extract($args);
-    include $file;
+    require $file;
     return ob_get_clean();
 }
 // Not yet finished
@@ -228,7 +229,7 @@ function pagelets($id = null, $func = null) {
     static $pagelets = array();
     if ($id == null && $func == null) {
         ob_flush();
-        flush();        
+        flush();
         $pagelets = array_map(function($pagelet) {
             $ret = $pagelet();
             ob_flush();
@@ -277,7 +278,6 @@ function not($filter) {
     };
     return is_bool($filter) ? !$filter : null;
 }
-
 function equal($exact, $strict = true) {
     $compare = $exact instanceof field ? $exact->value : $exact;
     return function($value) use ($compare, $strict) {
@@ -335,9 +335,10 @@ function specialchars($quote = ENT_NOQUOTES, $charset = 'UTF-8', $double = true)
     };
 }
 function slug($str, $delimiter = '-') {
-    $str = preg_replace('/[^\pL\pNd]+/u', $delimiter, $str);
-    $str = iconv('UTF-8', 'ASCII//TRANSLIT', $str);
-    $str = preg_replace('/[^\w]+/', $delimiter, $str);
+    $qtd = preg_quote($delimiter);
+    $str = preg_replace('/\p{Mn}/u', '', normalizer_normalize($str, Normalizer::FORM_KD));
+    $str = preg_replace('[\W]', $delimiter, $str);
+    $str = preg_replace("/[{$qtd}]{2,}/", $delimiter, $str);
     return strtolower(trim($str, $delimiter));
 }
 function date_from_format($format = 'Y-m-d', $timezone = null) {
