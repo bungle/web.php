@@ -204,7 +204,7 @@ class view {
         extract((array)$this);
         start:
         ob_start();
-        require $file;
+        include $file;
         if (!isset($layout)) return ob_get_clean();
         $view = ob_get_clean();
         $file = $layout;
