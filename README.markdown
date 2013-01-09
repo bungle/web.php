@@ -496,19 +496,19 @@ TBD
 
 `sqlite.php` has a few functions to make accessing SQLite 3 databases intuitive, and safe.
 
-Single row returning functions:
+#### Single row returning functions:
 
-* `\sqlite\value`
-* `\sqlite\pair`
-* `\sqlite\row`
+* `\sqlite\value([read documentation about arguments])`
+* `\sqlite\pair([read documentation about arguments])`
+* `\sqlite\row([read documentation about arguments])`
 
-Multiple rows can be queried with following functions:
+#### Multiple rows can be queried with following functions:
 
 * `\sqlite\values([read documentation about arguments])`
 * `\sqlite\pairs([read documentation about arguments])`
 * `\sqlite\rows([read documentation about arguments])`
 
-Data manipulation operations can be called with the following functions:
+#### Data manipulation operations can be called with the following functions:
 
 * `\sqlite\insert($table, $values, &$id)`
 * `\sqlite\update([read documentation about arguments])`
