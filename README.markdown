@@ -124,7 +124,7 @@ get('/posts/%d', function($id) {
             ]));
         case 2: die(json_encode([
                 'id'    => 2,
-                'title' => 'I'm really starting to like web.php',
+                'title' => "I'm really starting to like web.php",
                 'body'  => 'Lorem...' 
             ]));
     }
