@@ -60,13 +60,15 @@ If you are using something other than `Apache` with `mod_rewrite` or `nginx`, Go
 
 ### Create `index.php` Bootstrap File
 
-    <?php
-    include 'web.php';
-    get('/', function() {
-        die('Hello, World!');
-    });
-    status(404);
-    die('404 Not Found');
+```php
+<?php
+include 'web.php';
+get('/', function() {
+    die('Hello, World!');
+});
+status(404);
+die('404 Not Found');
+```
 
 ## Routing
 
@@ -78,28 +80,32 @@ Use `get($path, $func)` to route HTTP GET requests.
 
 #### Routes without Parameters (the Routes Work on Sub-Directories too):
 
-    <?php
-    get('/', function() {
-        die('Hello, World!');
-    });
+```php
+<?php
+get('/', function() {
+    die('Hello, World!');
+});
+```
 
 or:
 
-    <?php
-    get('/posts', function() {
-        die(json_encode([
-            [
-                'id'    => 1,
-                'title' => 'Trying out web.php',
-                'body'  => 'Lorem...' 
-            ],
-            [
-                'id'    => 2,
-                'title' => 'I'm really starting to like web.php',
-                'body'  => 'Lorem...' 
-            ]
-        ]));
-    });
+```php
+<?php
+get('/posts', function() {
+    die(json_encode([
+        [
+            'id'    => 1,
+            'title' => 'Trying out web.php',
+            'body'  => 'Lorem...' 
+        ],
+        [
+            'id'    => 2,
+            'title' => 'I'm really starting to like web.php',
+            'body'  => 'Lorem...' 
+        ]
+    ]));
+});
+```
 
 #### Parameterized Routes
 
@@ -107,21 +113,23 @@ Route parameters in `web.php` are parsed with `sscanf` and `vsprintf`, but we ha
 the same as `%[^/]` (everything until or except `/`). Please read the documentation for the format from
 [sprintf's](http://www.php.net/manual/function.sprintf.php) documentation.
 
-    <?php
-    get('/posts/%d', function($id) {
-        switch ($id) {
-            case 1: die(json_encode([
-                    'id'    => 1,
-                    'title' => 'Trying out web.php',
-                    'body'  => 'Lorem...' 
-                ]));
-            case 2: die(json_encode([
-                    'id'    => 2,
-                    'title' => 'I'm really starting to like web.php',
-                    'body'  => 'Lorem...' 
-                ]));
-        }
+```php
+<?php
+get('/posts/%d', function($id) {
+    switch ($id) {
+        case 1: die(json_encode([
+                'id'    => 1,
+                'title' => 'Trying out web.php',
+                'body'  => 'Lorem...' 
+            ]));
+        case 2: die(json_encode([
+                'id'    => 2,
+                'title' => 'I'm really starting to like web.php',
+                'body'  => 'Lorem...' 
+            ]));
     }
+}
+```
 
 ### POST Routes
 
@@ -133,9 +141,11 @@ Use `put($path, $func)` to route HTTP PUT requests. See the *GET Routes* example
 
 You can send PUT requests with POST method by sending `_method` parameter that has a value of `PUT`:
 
-    <form method="post">
-        <input type="hidden" name="_method" value="PUT">
-    </form>
+```html
+<form method="post">
+    <input type="hidden" name="_method" value="PUT">
+</form>
+```
 
 ### DELETE Routes
 
