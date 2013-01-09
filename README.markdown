@@ -397,7 +397,7 @@ Hello World!
 
 *layout.php:*
 
-```html
+```php
 <!DOCTYPE html>
 <html>
     <head>
