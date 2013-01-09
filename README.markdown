@@ -375,7 +375,7 @@ Blocks are a method to move particular block of 'text' from views to a particula
 
 *view.php:*
 
-```html
+```php
 <?php
 $layout = 'layout.php';
 $title  = 'Blocks - web.php';
