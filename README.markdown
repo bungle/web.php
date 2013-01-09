@@ -571,8 +571,10 @@ TBD
 
 Use `\sqlite\value()` to get single value from database:
 
-    <?php
-    
+```php
+<?php
+$max = \sqlite\value('SELECT MAX(amount) FROM sales');
+```
 
 ## FAQ
 
