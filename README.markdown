@@ -347,14 +347,14 @@ Note: All the view variables are also accessible from layouts.
 
 *view.php:*
 
-```php
+```html
 <?php $layout = 'section.php' ?>
 <p>Hello World</p>
 ```
 
 *section.php:*
 
-```php
+```html
 <?php $layout = 'master.php' ?>
 <section>
     <?= $view ?>
@@ -363,7 +363,7 @@ Note: All the view variables are also accessible from layouts.
 
 *master.php:*
 
-```php
+```html
 <!DOCTYPE html>
 <html>
     <body>
