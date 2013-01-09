@@ -100,7 +100,7 @@ get('/posts', function() {
         ],
         [
             'id'    => 2,
-            'title' => 'I'm really starting to like web.php',
+            'title' => "I'm really starting to like web.php",
             'body'  => 'Lorem...' 
         ]
     ]));
@@ -153,9 +153,11 @@ Use `delete($path, $func)` to route HTTP DELETE requests. See the *GET Routes* e
 
 You can send DELETE requests with POST method by sending `_method` parameter that has a value of `DELETE`:
 
-    <form method="post">
-        <input type="hidden" name="_method" value="DELETE">
-    </form>
+```html
+<form method="post">
+    <input type="hidden" name="_method" value="DELETE">
+</form>
+```
 
 ### Routing All Types of Requests
 
@@ -165,49 +167,55 @@ Use `route($path, $func)` to route all HTTP requests. See the *GET Routes* examp
 
 You can send different content based on client's Accept HTTP Header:
 
-    <?php
-    get('/ping', accept('text/html', 'application/xhtml+xml', function() {
-    $html =<<<'HTML'
-    <html>
-        <body>PONG</body>
-    </html>
-    HTML;
-    die($html);
-    }));
-    
-    get('/ping', accept('application/xml', function() {
-    $xml =<<<'XML'
-    <?xml version="1.0" encoding="UTF-8" ?>
-    <pong />
-    XML;
-    die($xml);
-    }));
+```php
+<?php
+get('/ping', accept('text/html', 'application/xhtml+xml', function() {
+$html =<<<'HTML'
+<html>
+    <body>PONG</body>
+</html>
+HTML;
+die($html);
+}));
 
-    // Parameterized Routes with Content Negotiation:
-    get('/plus/%d/%d', accept('application/html', function($a, $b) {
-        die('<html><body>' . ($a + $b) . '</body></html>');
-    }));
+get('/ping', accept('application/xml', function() {
+$xml =<<<'XML'
+<?xml version="1.0" encoding="UTF-8" ?>
+<pong />
+XML;
+die($xml);
+}));
+
+// Parameterized Routes with Content Negotiation:
+get('/plus/%d/%d', accept('application/html', function($a, $b) {
+    die('<html><body>' . ($a + $b) . '</body></html>');
+}));
+```
 
 You can also use `accept` function like this:
 
-    <?php
-    get('/ping', function() {
-        accept([
-            'text/html'        => 'pong.html',
-            'application/json' => 'pong.json',
-            'application/xml'  => 'pong.xml'
-        ]) and die;
-    });
+```php
+<?php
+get('/ping', function() {
+    accept([
+        'text/html'        => 'pong.html',
+        'application/json' => 'pong.json',
+        'application/xml'  => 'pong.xml'
+    ]) and die;
+});
+```
 
 These work too (as described [here](#is-routing-to-anonymous-function-the-only-option)):
 
-    <?php
-    accept([
-        'text/html'        => 'phpinfo',
-        'application/xml'  => 'XML::xml',
-        'application/json' => 'JSON->json',
-        'text/plain'       => function() { die('Hello, World!'); }
-    ]);
+```php
+<?php
+accept([
+    'text/html'        => 'phpinfo',
+    'application/xml'  => 'XML::xml',
+    'application/json' => 'JSON->json',
+    'text/plain'       => function() { die('Hello, World!'); }
+]);
+```
 
 ## Forwards and Redirects
 
@@ -216,34 +224,38 @@ These work too (as described [here](#is-routing-to-anonymous-function-the-only-o
 Use `forward($name, $func)` to register a named forward. Call a named forward with `forward($name)`.
 Forwards need to be registered before using them.
 
-    <?php
-    forward('index', function() {
-        die('Index Page');
-    });
-    
-    get('/', function() {
-        forward('index')
-    });
-    
-    get('/another-url', function() {
-        forward('index')
-    });
+```php
+<?php
+forward('index', function() {
+    die('Index Page');
+});
+
+get('/', function() {
+    forward('index')
+});
+
+get('/another-url', function() {
+    forward('index')
+});
+```
 
 ### Redirects
 
 Use `redirect($url, $code = 302, $die = true)` to redirect the user in other page.
 Use `$code` value of `301` for permanent redirects.
-   
-    <?php
-    session_start();
-    get('/', function() {
-        die(isset($_SESSION['redirected']) ? 'Redirected' : 'Welcome!');
-    });
 
-    post('/', function() {
-        flash('redirected');
-        redirect('~/');
-    });
+```php
+<?php
+session_start();
+get('/', function() {
+    die(isset($_SESSION['redirected']) ? 'Redirected' : 'Welcome!');
+});
+
+post('/', function() {
+    flash('redirected');
+    redirect('~/');
+});
+```
 
 ### Flash Variables
 
@@ -256,36 +268,46 @@ Use `flash($name, $value = true, $hops = 1)` to set short living session variabl
 
 ### Views
 
-    <?php
-    get('/', function() {
-        die(new view('view.php'));
-    });
+```php
+<?php
+get('/', function() {
+    die(new view('view.php'));
+});
+```
 
 *view.php:*
 
-    <!DOCTYPE html>
-    Hello World
+```html
+<!DOCTYPE html>
+Hello World
+```
 
 #### Views with Properties
 
-    <?php
-    get('/%s', function($text) {
-        $view = new view('view.php');
-        $view->text = htmlspecialchars($text);
-        die($view);
-    });
+```php
+<?php
+get('/%s', function($text) {
+    $view = new view('view.php');
+    $view->text = htmlspecialchars($text);
+    die($view);
+});
+```
 
 *view.php:*
 
-    <!DOCTYPE html>
-    Hello, <?= $text ?>!
+```html
+<!DOCTYPE html>
+Hello, <?= $text ?>!
+```
 
 #### Global View Variables
 
 You can define global view variables that all the views will get with the following code:
 
-    <?php
-    view::$globals->title = 'web.php rocks!';
+```php
+<?php
+view::$globals->title = 'web.php rocks!';
+```
 
 Note: If local view variables are defined with same name as global variables, local variables overwrite the global ones.
 The globals are still accessible from `view::$globals`.
@@ -294,24 +316,30 @@ The globals are still accessible from `view::$globals`.
 
 You can define the layout by setting the `layout` variable in a view, you can do it like this:
 
-    <?php
-    view::$globals->layout = 'layout.php';      // or
-    $view = new view('view.php', 'layout.php'); // or
-    $view = new view('view.php');
-    $view->layout = 'layout.php';               // or
-    $view = new view('view.php');               // see 'view.php'
+```php
+<?php
+view::$globals->layout = 'layout.php';      // or
+$view = new view('view.php', 'layout.php'); // or
+$view = new view('view.php');
+$view->layout = 'layout.php';               // or
+$view = new view('view.php');               // see 'view.php'
+```
 
 *view.php:*
 
-    <?php $layout = 'layout.php'; ?>
-    Hello, World!
+```php
+<?php $layout = 'layout.php'; ?>
+Hello, World!
+```
 
 *layout.php:*
 
-    <!DOCTYPE html>
-    <html>
-        <body><?= $view ?></body>
-    </html>
+```html
+<!DOCTYPE html>
+<html>
+    <body><?= $view ?></body>
+</html>
+```
 
 Note: All the view variables are also accessible from layouts.
 
@@ -319,24 +347,30 @@ Note: All the view variables are also accessible from layouts.
 
 *view.php:*
 
-    <?php $layout = 'section.php' ?>
-    <p>Hello World</p>
+```php
+<?php $layout = 'section.php' ?>
+<p>Hello World</p>
+```
 
 *section.php:*
 
-    <?php $layout = 'master.php' ?>
-    <section>
-        <?= $view ?>
-    </section>
+```php
+<?php $layout = 'master.php' ?>
+<section>
+    <?= $view ?>
+</section>
+```
 
 *master.php:*
 
-    <!DOCTYPE html>
-    <html>
-        <body>
-            <?= $view ?>
-        </body>
-    </html>
+```php
+<!DOCTYPE html>
+<html>
+    <body>
+        <?= $view ?>
+    </body>
+</html>
+```
    
 ### Blocks
 
