@@ -3,11 +3,13 @@
 
 ## Hello World in web.php
 
-    <?php
-    include 'web.php';
-    get('/', function() {
-        die('Hello, World!');
-    });
+```php
+<?php
+include 'web.php';
+get('/', function() {
+    die('Hello, World!');
+});
+```
 
 ## Table of Contents
 
@@ -517,8 +519,15 @@ TBD
 **Low lewel, and utility functions:**
 
 * `\sqlite\connect($filename = null, $flags = SQLITE3_OPEN_READWRITE, $busyTimeout = null)`
-* `\sqlite\prepare($query, $params = array())
+* `\sqlite\prepare($query, $params = array())`
 * `\sqlite\exec()`
+
+#### Querying Database
+
+Use `\sqlite\value()` to get single value from database:
+
+    <?php
+    
 
 ## FAQ
 
