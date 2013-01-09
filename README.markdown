@@ -577,7 +577,7 @@ $max = \sqlite\value('SELECT MAX(amount) FROM sales');
 // You can also pass arguments:
 $max = \sqlite\value('SELECT MAX(amount) FROM sales WHERE cid = ?', 134);
 // Or multiple arguments:
-$max = \sqlite\value('SELECT MAX(amount) FROM sales WHERE cid = ? AND sdtm < ?', 134, date_create());
+$max = \sqlite\value('SELECT MAX(amount) FROM sales WHERE cid = ? AND dtm < ?', 134, date_create());
 ```
 
 ## FAQ
