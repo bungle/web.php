@@ -378,44 +378,48 @@ Blocks are a method to move particular block of 'text' from views to a particula
 
 *view.php:*
 
-    <?php
-    $layout = 'layout.php';
-    $title  = 'Blocks - web.php';
-    ?>
-    <?php block($head); ?>
-        <meta name="description" content"web.php has blocks too!">
-    <?php block(); ?>
-    
-    Hello World!
-    
-    <?php block($aside); ?>
-        Hello Aside, too!
-    <?php block(); ?>
+```html
+<?php
+$layout = 'layout.php';
+$title  = 'Blocks - web.php';
+?>
+<?php block($head); ?>
+    <meta name="description" content"web.php has blocks too!">
+<?php block(); ?>
 
-    <?php block($scripts); ?>
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-    <?php block(); ?>
+Hello World!
+
+<?php block($aside); ?>
+    Hello Aside, too!
+<?php block(); ?>
+
+<?php block($scripts); ?>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+<?php block(); ?>
+```
 
 *layout.php:*
 
-    <!DOCTYPE html>
-    <html>
-        <head>
-            <title><?= isset($title) ? $title : 'Default Title' ?></title>
-            <?= isset($head) ? $head : '' ?>
-        </head>
-        <body>
-            <article>
-                <?= $view ?>
-            </article>
-            <?php if (isset($aside)): ?>
-            <aside>
-                <?= $aside ?>
-            </aside>
-            <?php endif; ?>
-            <?= isset($scripts) ? $scripts : '' ?>
-        </body>
-    </html>
+```html
+<!DOCTYPE html>
+<html>
+    <head>
+        <title><?= isset($title) ? $title : 'Default Title' ?></title>
+        <?= isset($head) ? $head : '' ?>
+    </head>
+    <body>
+        <article>
+            <?= $view ?>
+        </article>
+        <?php if (isset($aside)): ?>
+        <aside>
+            <?= $aside ?>
+        </aside>
+        <?php endif; ?>
+        <?= isset($scripts) ? $scripts : '' ?>
+    </body>
+</html>
+```
 
 ### Partials
 
