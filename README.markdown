@@ -496,23 +496,29 @@ TBD
 
 `sqlite.php` has a few functions to make accessing SQLite 3 databases intuitive, and safe.
 
-#### Single row returning functions:
+**Single row returning functions:**
 
-* `\sqlite\value([read documentation about arguments])`
-* `\sqlite\pair([read documentation about arguments])`
-* `\sqlite\row([read documentation about arguments])`
+* `\sqlite\value()`
+* `\sqlite\pair()`
+* `\sqlite\row()`
 
-#### Multiple rows can be queried with following functions:
+**Multiple rows can be queried with following functions:**
 
-* `\sqlite\values([read documentation about arguments])`
-* `\sqlite\pairs([read documentation about arguments])`
-* `\sqlite\rows([read documentation about arguments])`
+* `\sqlite\values()`
+* `\sqlite\pairs()`
+* `\sqlite\rows()`
 
-#### Data manipulation operations can be called with the following functions:
+**Data manipulation operations can be called with the following functions:**
 
 * `\sqlite\insert($table, $values, &$id)`
-* `\sqlite\update([read documentation about arguments])`
-* `\sqlite\delete([read documentation about arguments])`
+* `\sqlite\update()`
+* `\sqlite\delete()`
+
+**Low lewel, and utility functions:**
+
+* `\sqlite\connect($filename = null, $flags = SQLITE3_OPEN_READWRITE, $busyTimeout = null)`
+* `\sqlite\prepare($query, $params = array())
+* `\sqlite\exec()`
 
 ## FAQ
 
