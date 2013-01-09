@@ -179,11 +179,8 @@ die($html);
 }));
 
 get('/ping', accept('application/xml', function() {
-$xml =<<<'XML'
-<?xml version="1.0" encoding="UTF-8" ?>
-<pong />
-XML;
-die($xml);
+    echo '<' . '?xml version="1.0" encoding="utf-8"?' . '>';
+    die('<pong />');
 }));
 
 // Parameterized Routes with Content Negotiation:
