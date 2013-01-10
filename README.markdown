@@ -436,21 +436,27 @@ TBD (see: [Facebook's BigPipe](https://www.facebook.com/note.php?note_id=3894140
 
 Use `filter()` to filter a variable:
 
-    <?php
-    $email = 'john@doe.net';
-    echo filter($email, 'email') ? 'Valid Email' : 'Invalid Email';
+```php
+<?php
+$email = 'john@doe.net';
+echo filter($email, 'email') ? 'Valid Email' : 'Invalid Email';
+```
 
 #### Built-in Filters and Validators
 
 web.php has these built-in validators available that come with PHP's [Filter Funtions](http://www.php.net/manual/ref.filter.php):
 
-    'bool', 'int', 'float', 'ip', 'ipv4', 'ipv6', 'email', and 'url'
+```php
+'bool', 'int', 'float', 'ip', 'ipv4', 'ipv6', 'email', and 'url'
+```
 
 In addition to that you can validate using regular expressions:
 
-    <?php
-    $email = 'john@doe.net';
-    echo filter($email, '/^.+@.+$/') ? 'Valid Email' : 'Invalid Email'; // Outputs 'Valid Email'
+```php
+<?php
+$email = 'john@doe.net';
+echo filter($email, '/^.+@.+$/') ? 'Valid Email' : 'Invalid Email'; // Outputs 'Valid Email'
+```
 
 But that is not all, web.php comes with these functions to aid in validation:
 
@@ -466,22 +472,24 @@ But that is not all, web.php comes with these functions to aid in validation:
 
 Example:
 
-    <?php
-    $email = 'john@doe.net';
-    echo filter(
-        $email,
-        'email',
-        choice('john@doe.net', 'john@doe.com')
-    ) ? 'Valid Email' : 'Invalid Email'; // Outputs 'Valid Email'
-    
-    $age_o = '16';
-    $age_f = filter(
-        $age_o,
-        'int',
-        'intval',
-        not(between(0, 18))
-    );
-    echo $age_f !== false ? 'Under-aged: {$age_o}' : "Over-aged: {$age_f}"; // Outputs 'Under-aged: 16'
+```php
+<?php
+$email = 'john@doe.net';
+echo filter(
+$email,
+'email',
+choice('john@doe.net', 'john@doe.com')
+) ? 'Valid Email' : 'Invalid Email'; // Outputs 'Valid Email'
+
+$age_o = '16';
+$age_f = filter(
+$age_o,
+'int',
+'intval',
+not(between(0, 18))
+);
+echo $age_f !== false ? 'Under-aged: {$age_o}' : "Over-aged: {$age_f}"; // Outputs 'Under-aged: 16'
+```
 
 Note: you can use multiple filters with single filter call.
 
@@ -492,42 +500,50 @@ return false immediately.
 
 The most simple modifying filter:
 
-    <?php
-    function world_filter($value) {
-        return "{$value} World!";
-    }
-    echo filter('Hello', 'world_filter');               // Outputs 'Hello World!'
-    echo filter('Hello', 'world_filter', 'strtoupper'); // Outputs 'HELLO WORLD!'
+```php
+<?php
+function world_filter($value) {
+return "{$value} World!";
+}
+echo filter('Hello', 'world_filter');               // Outputs 'Hello World!'
+echo filter('Hello', 'world_filter', 'strtoupper'); // Outputs 'HELLO WORLD!'
+```
 
 The most simple validating filters:
 
-    <?php
-    function true_validator($value) {
-        return true;
-    }
-    function false_validator($value) {
-        return false;
-    }    
-    $valid = filter('Hello', 'true_validator');                    // $valid holds true
-    $valid = filter('Hello', 'true_validator', 'false_validator'); // $valid holds false
+```php
+<?php
+function true_validator($value) {
+return true;
+}
+function false_validator($value) {
+return false;
+}    
+$valid = filter('Hello', 'true_validator');                    // $valid holds true
+$valid = filter('Hello', 'true_validator', 'false_validator'); // $valid holds false
+```
 
 You can also mix modifying filters and validating filters:
 
-    <?php
-    $value = filter('1', 'int', 'intval'); // $value holds int(1)
-    $value = filter('A', 'int', 'intval'); // $value holds bool(false)
+```php
+<?php
+$value = filter('1', 'int', 'intval'); // $value holds int(1)
+$value = filter('A', 'int', 'intval'); // $value holds bool(false)
+```
 
 Sometimes you need to write parameterized filters:
 
-    <?php
-    function lessthan($number) {
-        return function($value) use ($number) {
-            return $value < $number;
-        };    
-    }
-    
-    $num = '5';
-    echo filter($num, 'int', 'intval', lessthan(6)) ? "{$num} is less than 6" : "{$num} is not less than 6";
+```php
+<?php
+function lessthan($number) {
+return function($value) use ($number) {
+    return $value < $number;
+};    
+}
+
+$num = '5';
+echo filter($num, 'int', 'intval', lessthan(6)) ? "{$num} is less than 6" : "{$num} is not less than 6";
+```
 
 Note: You can also have your filter functions namespaced.
 
@@ -590,16 +606,20 @@ $max = \sqlite\value('SELECT MAX(amount) FROM sales WHERE cid = ? AND dtm < ?', 
 
 You can actually route to `files`, `functions`, `static class methods`, and `object instance methods`:
 
-    get('/%d', 'router.php');          // Look for $args[0] inside router.php
-    get('/%p', 'die');                 // URL: /hello will output 'hello' with PHP's built-in function 'die'
-    get('/', 'Clazz::staticMethod');   // Executes a static method
-    get('/', 'Clazz->instanceMethod'); // Instantiates new object from class 'Clazz' using parameterless constructor
+```php
+get('/%d', 'router.php');          // Look for $args[0] inside router.php
+get('/%p', 'die');                 // URL: /hello will output 'hello' with PHP's built-in function 'die'
+get('/', 'Clazz::staticMethod');   // Executes a static method
+get('/', 'Clazz->instanceMethod'); // Instantiates new object from class 'Clazz' using parameterless constructor
+```
 
 #### web.php pollutes the global root namespace!
 
 Yes, that's true. `web.php` could be wrapped to namespace just by making this declaration on top of the `web.php`:
 
-    namespace web;
+```php
+namespace web;
+```
 
 ... and then just instead of calling for example `get` you would call `web\get`. The reason we didn't choose to do that is
 just that we like using the shorter versions for these functions. We welcome you to do a fork of `web.php`, if you see
@@ -658,8 +678,10 @@ You could also try out NoSQL DBs like:
 
 Right now the tests are work in progress.
 
-    cd tests
-    pear run-tests
+```bash
+cd tests
+pear run-tests
+```
 
 #### PHP Sucks! Where to go next?
 
