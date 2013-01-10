@@ -35,26 +35,30 @@ minimalistic approach of `web.php`.
 
 ### On Apache Modify .htaccess
 
-    <IfModule mod_rewrite.c>
-        RewriteCond %{REQUEST_FILENAME} !-f
-    	RewriteRule ^ index.php [L]
-    </IfModule>
+```apache
+<IfModule mod_rewrite.c>
+    RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteRule ^ index.php [L]
+</IfModule>
+```    
 
 ### On Nginx with PHP-FPM
 
-    server {
-        location / {
-            try_files                 $uri $uri/ /index.php?$args;
-        }
-        location = /index.php {
-            try_files $uri = 404;
-            fastcgi_pass              127.0.0.1:9000;
-            fastcgi_index             index.php;
-            fastcgi_param             SCRIPT_FILENAME   $document_root$fastcgi_script_name;
-            fastcgi_split_path_info   ^(.+\.php)(/.+)$;
-            include fastcgi_params;
-        }
+```nginx
+server {
+    location / {
+        try_files                 $uri $uri/ /index.php?$args;
     }
+    location = /index.php {
+        try_files $uri = 404;
+        fastcgi_pass              127.0.0.1:9000;
+        fastcgi_index             index.php;
+        fastcgi_param             SCRIPT_FILENAME   $document_root$fastcgi_script_name;
+        fastcgi_split_path_info   ^(.+\.php)(/.+)$;
+        include fastcgi_params;
+    }
+}
+```
 
 If you are using something other than `Apache` with `mod_rewrite` or `nginx`, Google for instructions.
 
