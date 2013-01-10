@@ -214,8 +214,8 @@ accept([
     'text/html'        => 'phpinfo',
     'application/xml'  => 'XML::xml',
     'application/json' => 'JSON->json',
-    'text/plain'       => function() { die('Hello, World!'); }
-]);
+    'text/plain'       => function() { echo 'Hello, World!'; }
+]) and die;
 ```
 
 ## Forwards and Redirects
