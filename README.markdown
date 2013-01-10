@@ -292,7 +292,7 @@ get('/%s', function($text) {
 
 *view.php:*
 
-```html
+```html+php
 <!DOCTYPE html>
 Hello, <?= $text ?>!
 ```
@@ -331,7 +331,7 @@ Hello, World!
 
 *layout.php:*
 
-```html
+```html+php
 <!DOCTYPE html>
 <html>
     <body><?= $view ?></body>
@@ -344,14 +344,14 @@ Note: All the view variables are also accessible from layouts.
 
 *view.php:*
 
-```html
+```html+php
 <?php $layout = 'section.php' ?>
 <p>Hello World</p>
 ```
 
 *section.php:*
 
-```html
+```html+php
 <?php $layout = 'master.php' ?>
 <section>
     <?= $view ?>
@@ -360,7 +360,7 @@ Note: All the view variables are also accessible from layouts.
 
 *master.php:*
 
-```html
+```html+php
 <!DOCTYPE html>
 <html>
     <body>
@@ -375,7 +375,7 @@ Blocks are a method to move particular block of 'text' from views to a particula
 
 *view.php:*
 
-```php
+```html+php
 <?php
 $layout = 'layout.php';
 $title  = 'Blocks - web.php';
@@ -397,7 +397,7 @@ Hello World!
 
 *layout.php:*
 
-```php
+```html+php
 <!DOCTYPE html>
 <html>
     <head>
