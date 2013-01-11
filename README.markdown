@@ -70,7 +70,7 @@ include 'web.php';
 get('/', function() {
     die('Hello, World!');
 });
-status(404);
+http_response_code(404);
 die('404 Not Found');
 ```
 
