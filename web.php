@@ -47,7 +47,7 @@ function forward($name, $func = null) {
     static $routes = array();
     if ($func != null) {
         $routes[$name] = $func;
-        return;
+        return $func;
     }
     if (isset($routes[$name])) return call($routes[$name]);
     trigger_error(sprintf('Invalid forward: %s', $name), E_USER_WARNING);
