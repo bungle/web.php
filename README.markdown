@@ -240,6 +240,18 @@ get('/another-url', function() {
 });
 ```
 
+You can also register forwards when defining routes:
+
+```php
+get('/', forward('index', function() {
+    die('Index Page');
+}));
+
+get('/another-url', function() {
+    forward('index')
+});
+```
+
 ### Redirects
 
 Use `redirect($url, $code = 302, $die = true)` to redirect the user in other page.
