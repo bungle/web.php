@@ -70,7 +70,7 @@ include 'web.php';
 get('/', function() {
     die('Hello, World!');
 });
-status(404);
+http_response_code(404);
 die('404 Not Found');
 ```
 
@@ -234,6 +234,18 @@ forward('index', function() {
 get('/', function() {
     forward('index')
 });
+
+get('/another-url', function() {
+    forward('index')
+});
+```
+
+You can also register forwards when defining routes:
+
+```php
+get('/', forward('index', function() {
+    die('Index Page');
+}));
 
 get('/another-url', function() {
     forward('index')
