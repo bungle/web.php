@@ -488,17 +488,17 @@ Example:
 <?php
 $email = 'john@doe.net';
 echo filter(
-$email,
-'email',
-choice('john@doe.net', 'john@doe.com')
+    $email,
+    'email',
+    choice('john@doe.net', 'john@doe.com')
 ) ? 'Valid Email' : 'Invalid Email'; // Outputs 'Valid Email'
 
 $age_o = '16';
 $age_f = filter(
-$age_o,
-'int',
-'intval',
-not(between(0, 18))
+    $age_o,
+    'int',
+    'intval',
+    not(between(0, 18))
 );
 echo $age_f !== false ? 'Under-aged: {$age_o}' : "Over-aged: {$age_f}"; // Outputs 'Under-aged: 16'
 ```
@@ -515,7 +515,7 @@ The most simple modifying filter:
 ```php
 <?php
 function world_filter($value) {
-return "{$value} World!";
+    return "{$value} World!";
 }
 echo filter('Hello', 'world_filter');               // Outputs 'Hello World!'
 echo filter('Hello', 'world_filter', 'strtoupper'); // Outputs 'HELLO WORLD!'
@@ -526,10 +526,10 @@ The most simple validating filters:
 ```php
 <?php
 function true_validator($value) {
-return true;
+    return true;
 }
 function false_validator($value) {
-return false;
+    return false;
 }    
 $valid = filter('Hello', 'true_validator');                    // $valid holds true
 $valid = filter('Hello', 'true_validator', 'false_validator'); // $valid holds false
