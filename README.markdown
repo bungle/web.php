@@ -500,7 +500,7 @@ $age_f = filter(
     'intval',
     not(between(0, 18))
 );
-echo $age_f !== false ? 'Under-aged: {$age_o}' : "Over-aged: {$age_f}"; // Outputs 'Under-aged: 16'
+echo $age_f !== false ? "Under-aged: {$age_o}" : "Over-aged: {$age_f}"; // Outputs 'Under-aged: 16'
 ```
 
 Note: you can use multiple filters with single filter call.
