@@ -548,9 +548,9 @@ Sometimes you need to write parameterized filters:
 ```php
 <?php
 function lessthan($number) {
-return function($value) use ($number) {
-    return $value < $number;
-};    
+    return function($value) use ($number) {
+        return $value < $number;
+    };    
 }
 
 $num = '5';
