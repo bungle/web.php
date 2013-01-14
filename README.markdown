@@ -243,12 +243,12 @@ get('/another-url', function() {
 You can also register forwards when defining routes:
 
 ```php
-get('/', forward('index', function() {
+get('/', forward('/', function() {
     die('Index Page');
 }));
 
 get('/another-url', function() {
-    forward('index')
+    forward('/')
 });
 ```
 
