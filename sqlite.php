@@ -82,8 +82,9 @@ function single($query, $params = array(), $type = 'r') {
     $row = $type === 'r' ? $rs->fetchArray(SQLITE3_ASSOC) : $rs->fetchArray(SQLITE3_NUM);
     $rs->finalize();
     $st->close();
-    if ($type === 'v') return $row[0];
-    if ($type === 'p') return array($row[0] => $row[1]);
+    if ($row === false) return false;
+    if ($type === 'v')  return $row[0];
+    if ($type === 'p')  return array($row[0] => $row[1]);
     return $row;
 }
 function values() {
