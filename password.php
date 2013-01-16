@@ -48,5 +48,5 @@ function check($password, $hash, $strict = true) {
     $valid = crypt($password, $hash) === $hash;
     if ($strict || $valid) return $valid;
     return crypt(mb_strtolower($password, 'UTF-8') ^ mb_strtoupper($password, 'UTF-8') ^ $password, $hash) === $hash ||
-           crypt(mb_strtoupper(mb_substr($password, 0, 1, 'UTF-8')) . mb_substr($password, 1, mb_strlen($password, 'UTF-8'), 'UTF-8'), $hash) === $hash;
+           crypt(mb_strtolower(mb_substr($password, 0, 1, 'UTF-8')) . mb_substr($password, 1, mb_strlen($password, 'UTF-8'), 'UTF-8'), $hash) === $hash;
 }
