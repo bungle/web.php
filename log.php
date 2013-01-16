@@ -23,18 +23,35 @@ namespace log {
         if ($level > LOG_WARNING) return 'INFO';
         return $level > LOG_ERR ? 'WARNING' : 'ERROR';
     }
-    function file($file, $log_level = LOG_DEBUG) {
-        return function($message, $level, $trace) use ($file, $log_level) {
-            if ($log_level < $level) return false;
-            static $messages = null;
-            if ($messages == null) {
-                register_shutdown_function(function($file) use (&$messages) {
-                    file_put_contents($file, $messages, FILE_APPEND | LOCK_EX);
-                }, $file);
-            }
+    function file($file, $log_level = LOG_DEBUG, $style = null) {
+        return function($message, $level, $trace) use ($file, $log_level, $style) {
+            if ($log_level < $level && $style !== 'firehose') return false;
             list($usec, $sec) = explode(' ', microtime());
             if (is_array($message)) $message = print_r($message, true);
-            $messages .= sprintf('%s %7s %-20s %s', date('Y-m-d H:i:s.', $sec) . substr($usec, 2, 3) , level($level), basename($trace[0]['file']) . ':' . $trace[0]['line'], trim($message) . PHP_EOL);
+            $message = sprintf('%s %7s %-20s %s', date('Y-m-d H:i:s.', $sec) . substr($usec, 2, 3) , level($level), basename($trace[0]['file']) . ':' . $trace[0]['line'], trim($message) . PHP_EOL);
+            if ($style !== null) {
+                static $messages = null;
+                static $firehosed = null;
+                if ($firehosed === null || $firehosed === false) {
+                    $firehosed = $style === 'firehose' ? $log_level >= $level : true;
+                }
+                if ($messages === null) {
+                    register_shutdown_function(function($file) use (&$messages, &$firehosed) {
+                        if ($firehosed) file_put_contents($file, $messages, FILE_APPEND | LOCK_EX);
+                    }, $file);
+                }
+                $messages .= $message;
+                return true;
+            }
+            static $fp = null;
+            if ($fp === null || $fp === false) {
+                set_error_handler(function() {}, -1);
+                $fp = fopen($file, 'a');
+                restore_error_handler();
+                if ($fp === false) return false;
+                register_shutdown_function(function() use (&$fp) { fclose($fp); });
+            }
+            return fwrite($fp, $message);
         };
     }
     function syslog($log_level = LOG_DEBUG, $ident = false, $option = LOG_ODELAY, $facility = LOG_USER) {
