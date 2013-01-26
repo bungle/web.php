@@ -1,6 +1,5 @@
 <?php
 namespace sqlite;
-
 class blob {
     public $data;
     function __construct($data = null) {
@@ -10,7 +9,7 @@ class blob {
 function blob($data) {
     return new blob($data);
 }
-function connect($filename = null, $flags = SQLITE3_OPEN_READWRITE, $busyTimeout = null) {
+function connect($filename = null, $flags = SQLITE3_OPEN_READWRITE, $busyTimeout = null, $pragmas = array()) {
     static $sqlite = null;
     if ($sqlite !== null) return $sqlite;
     if ($filename !== null) {
@@ -26,6 +25,12 @@ function connect($filename = null, $flags = SQLITE3_OPEN_READWRITE, $busyTimeout
     } elseif (defined('SQLITE3_BUSY_TIMEOUT')) {
         $sqlite->busyTimeout(SQLITE3_BUSY_TIMEOUT);
     }
+    if (count($pragmas) === 0) return $sqlite;
+    $sql = '';
+    foreach($pragmas as $pragma => $value) {
+        $sql .= is_int($pragma) ? "PRAGMA {$value};\n" : "PRAGMA {$pragma}={$value};\n";
+    }
+    $sqlite->exec($sql);
     return $sqlite;
 }
 function prepare($query, $params = array()) {
@@ -46,7 +51,7 @@ function prepare($query, $params = array()) {
         elseif ($param instanceof blob)
             $st->bindValue(++$i, $param->data, $param->data === null ? SQLITE3_NULL : SQLITE3_BLOB);
         elseif ($param instanceof \DateTime)
-            $st->bindValue(++$i, $param->format('Y-m-d\TH:i:s'), SQLITE3_TEXT);
+            $st->bindValue(++$i, $param->format('Y-m-d H:i:s'), SQLITE3_TEXT);
         else
             $st->bindValue(++$i, $param);
     }
@@ -83,8 +88,8 @@ function single($query, $params = array(), $type = 'r') {
     $rs->finalize();
     $st->close();
     if ($row === false) return false;
-    if ($type === 'v')  return $row[0];
-    if ($type === 'p')  return array($row[0] => $row[1]);
+    if ($type === 'v') return $row[0];
+    if ($type === 'p') return array($row[0] => $row[1]);
     return $row;
 }
 function values() {
