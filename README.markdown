@@ -22,6 +22,7 @@ get('/', function() {
 * [Sending Files](#sending-files)
 * [Logging with log.php](#logging-with-logphp)
 * [Password Hashing & Checking with password.php](#password-hashing--checking-with-passwordphp)
+* [Database Access](#database-access)
 * [FAQ](#faq)
 * [License](#license)
 
