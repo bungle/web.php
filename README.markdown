@@ -80,7 +80,7 @@ die('404 Not Found');
 
 ### GET Routes
 
-Use `get($path, $func)` to route HTTP GET requests.
+Use `get($path, $func)` to route HTTP GET requests, and HTTP HEAD requests.
 
 #### Routes without Parameters (the Routes Work on Sub-Directories too):
 
@@ -436,7 +436,54 @@ Hello World!
 
 ### Partials
 
-TBD
+Partials are included fragments. They are almost similar to `include` or `require` but they allow passing arguments,
+and they return the content as a string instead of outputting directly. 
+
+```html+php
+<!DOCTYPE html>
+<html>
+    <body>
+        <?= partial('./body.php') ?>
+    </body>
+</html>
+```
+
+You can also pass variables to partials:
+
+```html+php
+<!DOCTYPE html>
+<html>
+    <body>
+        <?= partial('./body.php', ['name' => 'web.php']) ?>
+    </body>
+</html>
+```
+
+*body.php:*
+
+```html+php
+Hello, <?= $name ?>!
+```
+
+It is possible to render partials when constructing a view:
+
+```php
+<?php
+$view = new view('./view.php');
+$view->body = partial('./body.php', ['name' => 'web.php']);
+die($view);
+```
+
+*view.php:*
+
+```html+php
+<!DOCTYPE html>
+<html>
+    <body>
+        <?= body ?>
+    </body>
+</html>
+```
 
 ### Pagelets
 
