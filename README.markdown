@@ -470,7 +470,7 @@ It is possible to render partials when constructing a view:
 ```php
 <?php
 $view = new view('./view.php');
-$view->body = partial('./view/body.php', ['name' => 'web.php']);
+$view->body = partial('./body.php', ['name' => 'web.php']);
 die($view);
 ```
 
