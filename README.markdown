@@ -465,7 +465,7 @@ You can also pass variables to partials:
 Hello, <?= $name ?>!
 ```
 
-It is possibly to render partials when constructing a view:
+It is possible to render partials when constructing a view:
 
 ```php
 <?php
