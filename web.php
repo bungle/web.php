@@ -1,7 +1,7 @@
 <?php
 // Core Functions
-function get($path, $func) {
-    return $_SERVER['REQUEST_METHOD'] === 'GET' || $_SERVER['REQUEST_METHOD'] === 'HEAD' ? route($path, $func) : false;
+function get($path, $func, $head = true) {
+    return $_SERVER['REQUEST_METHOD'] === 'GET' || ($head && $_SERVER['REQUEST_METHOD'] === 'HEAD') ? route($path, $func) : false;
 }
 function post($path, $func) {
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') return false;
