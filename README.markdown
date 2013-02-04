@@ -48,7 +48,7 @@ minimalistic approach of `web.php`.
 ```nginx
 server {
     location / {
-        try_files                 $uri $uri/ /index.php?$args;
+        try_files                 $uri $uri/ /index.php$is_args$args;
     }
     location = /index.php {
         try_files                 $uri = 404;
