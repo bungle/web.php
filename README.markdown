@@ -81,7 +81,7 @@ die('404 Not Found');
 
 ### GET Routes
 
-Use `get($path, $func)` to route HTTP GET requests, and HTTP HEAD requests.
+Use `get($path, $func, $head = true)` to route HTTP GET requests, and HTTP HEAD requests (by default).
 
 #### Routes without Parameters (the Routes Work on Sub-Directories too):
 
