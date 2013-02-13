@@ -293,31 +293,34 @@ function date_from_format($format = 'Y-m-d', $timezone = null) {
 // Form
 class form {
     public $valid = true;
+    public $fields = array();
     function __construct($args = null) {
         if ($args == null) return;
-        foreach ($args as $name => $value) $this->$name = $value;
+        foreach ($args as $name => $value) $this->fields[$name] = new field($name, $value);
     }
     function __get($name) {
-        if (!isset($this->$name)) $this->$name = new field($name);
-        return $this->$name;
+        if (!isset($this->fields[$name]))  $this->fields[$name] = new field($name);
+        return $this->fields[$name];
     }
     function __set($name, $value) {
-        $this->$name = new field($name, $value);
+        $this->fields[$name] = $value instanceof field ? $value : new field($name, $value);
     }
     function validate() {
-        foreach($this as $field) {
-            if ($field instanceof field && !$field->valid)
-                return $this->valid = false;
+        foreach($this->fields as $field) {
+            if ($field instanceof field && !$field->valid) return $this->valid = false;
         }
         return $this->valid = true;
     }
     function data() {
-        $args = func_num_args() > 0;
-        if ($args) $args = func_get_args();
         $data = array();
-        foreach($this as $field)
-            if ($field instanceof field && $field->valid && ($args === false || in_array($field->name, $args, true)))
-                $data[$field->name] = $field->value;
+        if (func_num_args() === 0) {
+            foreach($this->fields as $field) $data[$field->name] = $field->value;
+        } else {
+            $args = func_get_args();
+            foreach($args as $arg) {
+                if (isset($this->fields[$arg])) $data[$this->fields[$arg]->name] = $this->fields[$arg]->value;
+            }
+        }
         return $data;
     }
 }
