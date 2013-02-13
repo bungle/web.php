@@ -10,7 +10,7 @@ function blob($data) {
     return new blob($data);
 }
 function connect($filename = null, $flags = SQLITE3_OPEN_READWRITE, $busyTimeout = null, $pragmas = array()) {
-    static $sqlite = null;
+    static $sqlite;
     if ($sqlite !== null) return $sqlite;
     if ($filename !== null) {
         $sqlite = new \SQLite3($filename, $flags);
