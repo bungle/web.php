@@ -16,8 +16,8 @@ function delete($path, $func) {
 }
 function route($path, $func) {
     if ($func === false) return false;
-    static $url = null;
-    if ($url == null) {
+    static $url;
+    if ($url === null) {
         $url = parse_url($_SERVER['SCRIPT_NAME'], PHP_URL_PATH);
         $url = trim(substr(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), strlen(substr($url, 0, strrpos($url, '/')))), '/');
     }
@@ -45,7 +45,7 @@ function call($func, array $args = array()) {
 }
 function forward($name, $func = null) {
     static $routes = array();
-    if ($func != null) {
+    if ($func !== null) {
         $routes[$name] = $func;
         return $func;
     }
@@ -71,22 +71,22 @@ function accept() {
     return $func;
 }
 function url($url = null, $abs = false) {
-    if ($url == null) {
+    if ($url === null) {
         $url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
         $abs = true;
     }
     if (parse_url($url, PHP_URL_SCHEME) !== null) return $url;
-    static $base = null, $path = null, $root = null;
-    if ($base == null) {
+    static $base, $path, $root;
+    if ($base === null) {
         $base = parse_url($_SERVER['SCRIPT_NAME'], PHP_URL_PATH);
         $base = substr($base, 0, strrpos($base, '/'));
     }
-    if ($path == null) {
+    if ($path === null) {
         $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
         $path = substr($path, 0, strrpos($path, '/'));
     }
     if (!$abs) return strpos($url, '~/') === 0 ? $base . '/' . substr($url, 2) : $url;
-    if ($root == null) {
+    if ($root === null) {
         $root = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'];
         $port = $_SERVER['SERVER_PORT'];
         if (($root[4] === 's' && $port !== '443') || $port !== '80') $root .= ":$port";
@@ -107,7 +107,7 @@ function flash($name, $value = true, $hops = 1) {
 }
 function sendfile($path, $name = null, $disposition = 'inline', $mime = null, $die = true) {
     $filename = $name === null ? basename($path) : basename($name);
-    if ($mime == null) {
+    if ($mime === null) {
         $fnfo = finfo_open(FILEINFO_MIME_TYPE);
         $fmim = finfo_file($fnfo, $path);
         finfo_close($fnfo);
@@ -131,7 +131,7 @@ function sendfile($path, $name = null, $disposition = 'inline', $mime = null, $d
 }
 function ajax($func = null) {
     if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
-        return $func == null ? true : $func();
+        return $func === null ? true : $func();
     }
     return false;
 }
@@ -140,7 +140,7 @@ class view {
     static $globals;
     function __construct($file, $layout = null) {
         $this->file = $file;
-        if ($layout != null) $this->layout = $layout;
+        if ($layout !== null) $this->layout = $layout;
     }
     function __toString() {
         extract((array)self::$globals);
@@ -170,7 +170,7 @@ function partial($file, $args = null) {
 // see: https://www.facebook.com/note.php?note_id=389414033919
 function pagelets($id = null, $func = null) {
     static $pagelets = array();
-    if ($id == null && $func == null) {
+    if ($id === null && $func === null) {
         ob_flush();
         flush();
         $pagelets = array_map(function($pagelet) {
@@ -231,7 +231,7 @@ function length($min, $max = null, $charset = 'UTF-8') {
     return function($value) use ($min, $max, $charset) {
         $value = $value instanceof field ? $value->value : $value;
         $len = mb_strlen($value, $charset);
-        return $len >= $min && $len <= ($max == null ? $min : $max);
+        return $len >= $min && $len <= ($max === null ? $min : $max);
     };
 }
 function minlength($min, $charset = 'UTF-8') {
@@ -295,7 +295,7 @@ class form {
     public $valid = true;
     public $fields = array();
     function __construct($args = null) {
-        if ($args == null) return;
+        if ($args === null) return;
         foreach ($args as $name => $value) $this->fields[$name] = new field($name, $value);
     }
     function __get($name) {
