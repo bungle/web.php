@@ -623,13 +623,18 @@ TBD
 
 `sqlite.php` has a few functions to make accessing SQLite 3 databases intuitive, and safe.
 
-**Single row returning functions:**
+**Transactions functions:**
+
+* `\sqlite\tx($func, $mode = null)`
+
+**Single row/pair/value returning functions:**
 
 * `\sqlite\value()`
 * `\sqlite\pair()`
 * `\sqlite\row()`
+* `\sqlite\exists()`
 
-**Multiple rows can be queried with following functions:**
+**Multiple rows/pairs/values can be queried with following functions:**
 
 * `\sqlite\values()`
 * `\sqlite\pairs()`
