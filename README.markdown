@@ -623,7 +623,7 @@ TBD
 
 `sqlite.php` has a few functions to make accessing SQLite 3 databases intuitive, and safe.
 
-**Transactions functions:**
+**Transaction functions:**
 
 * `\sqlite\tx($func, $mode = null)`
 
@@ -650,7 +650,11 @@ TBD
 
 * `\sqlite\connect($filename = null, $flags = SQLITE3_OPEN_READWRITE, $busyTimeout = null)`
 * `\sqlite\prepare($query, $params = array())`
+* `\sqlite\single($query, $params = array(), $type = 'r')`
+* `\sqlite\multi($query, $params = array(), $type = 'r', $filter = null)`
+* `\sqlite\modify($query, $params, &$id = null)`
 * `\sqlite\exec()`
+* `\sqlite\blob($data)`
 
 #### Querying Database
 
