@@ -1,5 +1,10 @@
 <?php
 namespace sqlite;
+
+define('SQLITE3_TX_DEFERRED', 0);
+define('SQLITE3_TX_IMMEDIATE', 1);
+define('SQLITE3_TX_EXCLUSIVE', 2);
+
 class blob {
     public $data;
     function __construct($data = null) {
@@ -28,10 +33,54 @@ function connect($filename = null, $flags = SQLITE3_OPEN_READWRITE, $busyTimeout
     if (count($pragmas) === 0) return $sqlite;
     $sql = '';
     foreach($pragmas as $pragma => $value) {
-        $sql .= is_int($pragma) ? "PRAGMA {$value};\n" : "PRAGMA {$pragma}={$value};\n";
+        $sql .= is_int($pragma) ? "PRAGMA {$value};" : "PRAGMA {$pragma}={$value};";
     }
     $sqlite->exec($sql);
     return $sqlite;
+}
+function tx($func, $mode = null) {
+    switch($mode) {
+        case SQLITE3_TX_DEFERRED:  $tx = exec("BEGIN DEFERRED TRANSACTION")  !== false; break;
+        case SQLITE3_TX_IMMEDIATE: $tx = exec("BEGIN IMMEDIATE TRANSACTION") !== false; break;
+        case SQLITE3_TX_EXCLUSIVE: $tx = exec("BEGIN EXCLUSIVE TRANSACTION") !== false; break;
+        default:                   $tx = exec("BEGIN TRANSACTION")           !== false; break;
+    }
+    if ($tx === false) return false;
+    $success = true;
+    $er_h = null;
+    $er_h = set_error_handler(function($code, $message, $file, $line, $context) use (&$er_h, $success) {
+        $success = false;
+        \sqlite\exec('ROLLBACK TRANSACTION');
+        restore_error_handler();
+        if (is_callable($er_h)) {
+            $er_h($code, $message, $file, $line, $context);
+        } else {
+            trigger_error($message, E_USER_ERROR);
+        }
+    }, -1);
+    $ex_h = null;
+    $ex_h = set_exception_handler(function(Exception $ex) use(&$ex_h, $success) {
+        $success = false;
+        \sqlite\exec('ROLLBACK TRANSACTION');
+        restore_exception_handler();
+        if (is_callable($ex_h)) {
+            $ex_h($ex);
+        } else {
+            throw $ex;
+        }
+    });
+    $ret = $func();
+    if ($success) {
+        restore_exception_handler();
+        restore_error_handler();
+    }
+    if ($ret === false) {
+        \sqlite\exec('ROLLBACK TRANSACTION');
+        return false;
+
+    }
+    $committed = \sqlite\exec('COMMIT TRANSACTION') !== false;
+    return $committed ? $ret : false;
 }
 function prepare($query, $params = array()) {
     $st = connect()->prepare($query);
@@ -196,6 +245,31 @@ function delete() {
         return modify($sql, $args);
     }
     return false;
+}
+function exists() {
+    $count = func_num_args();
+    if ($count === 0) return false;
+    $args = func_get_args();
+    $table = array_shift($args);
+    $sql = "SELECT EXISTS(SELECT 1 FROM {$table}";
+    $exists = false;
+    if ($count === 1) {
+        $exists = value($sql . ')');
+    } else {
+        $where = array_shift($args);
+        if (is_array($where)) {
+            $sql .= ' WHERE ';
+            $sql .= implode(' = ? AND ', array_keys($where)) . ' = ?)';
+            $exists = single($sql, array_values($where), 'v');
+        } elseif (is_int($where)) {
+            $sql .= ' WHERE id = ?)';
+            $exists = value($sql, $where);
+        } elseif (is_string($where)) {
+            $sql .= " WHERE {$where})";
+            $exists = $count === 2 ? value($sql) : single($sql, $args, 'v');
+        }
+    }
+    return $exists !== false && $exists !== 0;
 }
 function exec() {
     $count = func_num_args();
