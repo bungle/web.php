@@ -105,28 +105,36 @@ function flash($name, $value = true, $hops = 1) {
     else
         $_SESSION['web.php:flash'][$name] = $hops;
 }
-function sendfile($path, $name = null, $disposition = 'inline', $mime = null, $die = true) {
+function mimetype($path, $default = 'application/octet-stream') {
+    if (!file_exists($path)) return $default;
+    $fnfo = finfo_open(FILEINFO_MIME_TYPE);
+    $fmim = finfo_file($fnfo, $path);
+    finfo_close($fnfo);
+    return $fmim === false ? $default : $fmim;
+}
+function sendfile($path, $name = null, $disposition = 'inline', $mime = 'application/octet-stream', $die = true) {
     $filename = $name === null ? basename($path) : basename($name);
-    if ($mime === null) {
-        $fnfo = finfo_open(FILEINFO_MIME_TYPE);
-        $fmim = finfo_file($fnfo, $path);
-        finfo_close($fnfo);
-        $mime = $fmim === false ? 'application/octet-stream' : $fmim;
-    }
-    header("Content-Type: {$mime}");
-    header("Content-Disposition: {$disposition}; filename=\"{$filename}\"");
     if (defined('XSENDFILE_HEADER')) {
+        header("Content-Type: {$mime}");
+        header("Content-Disposition: {$disposition}; filename=\"{$filename}\"");
         if (defined('XSENDFILE_PATH')) {
             header(XSENDFILE_HEADER . ': ' . XSENDFILE_PATH . $path);
         } else {
             header(XSENDFILE_HEADER . ': ' . $path);
         }
     } else {
+        if (!file_exists($path) && defined('SENDFILE_PATH') && file_exists(SENDFILE_PATH . $path)) {
+            $path = SENDFILE_PATH . $path;
+        }
+        header("Content-Type: {$mime}");
+        header("Content-Disposition: {$disposition}; filename=\"{$filename}\"");
         header('Content-Description: File Transfer');
         header('Content-Transfer-Encoding: binary');
         header('Content-Length: ' . filesize($path));
         readfile($path);
     }
+    ob_clean();
+    flush();
     if ($die) die;
 }
 function ajax($func = null) {
