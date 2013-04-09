@@ -48,7 +48,7 @@ function tx($func, $mode = null) {
     if ($tx === false) return false;
     $success = true;
     $er_h = null;
-    $er_h = set_error_handler(function($code, $message, $file, $line, $context) use (&$er_h, $success) {
+    $er_h = set_error_handler(function($code, $message, $file, $line, $context) use (&$er_h, &$success) {
         $success = false;
         \sqlite\exec('ROLLBACK TRANSACTION');
         restore_error_handler();
@@ -59,7 +59,7 @@ function tx($func, $mode = null) {
         }
     }, -1);
     $ex_h = null;
-    $ex_h = set_exception_handler(function(Exception $ex) use(&$ex_h, $success) {
+    $ex_h = set_exception_handler(function(Exception $ex) use (&$ex_h, &$success) {
         $success = false;
         \sqlite\exec('ROLLBACK TRANSACTION');
         restore_exception_handler();
@@ -86,6 +86,7 @@ function prepare($query, $params = array()) {
     $st = connect()->prepare($query);
     if ($st === false || count($params) === 0) return $st;
     $i = 0;
+    if (count($params) === 1 && is_array($params[0])) $params = $params[0];
     foreach($params as $param) {
         if (is_int($param))
             $st->bindValue(++$i, $param, SQLITE3_INTEGER);
