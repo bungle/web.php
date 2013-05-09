@@ -486,7 +486,7 @@ die($view);
 </html>
 ```
 
-If you want to pass all view variables to partial, you can do it like this:
+If you want to pass all view variables to a partial, you can do it like this:
 
 *view.php:*
 
