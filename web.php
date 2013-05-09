@@ -219,7 +219,7 @@ function filter() {
         }
         if (!$valid) return false;
     }
-    return $value !== $original ? $value : true;
+    return $value;
 }
 function not($filter) {
     if (is_callable($filter)) return function($value) use ($filter) {
