@@ -486,6 +486,19 @@ die($view);
 </html>
 ```
 
+If you want to pass all view variables to partial, you can do it like this:
+
+*view.php:*
+
+```html+php
+<!DOCTYPE html>
+<html>
+    <body>
+        <?= partial('./body.php', (array) this) ?>
+    </body>
+</html>
+```
+
 ### Pagelets
 
 TBD (see: [Facebook's BigPipe](https://www.facebook.com/note.php?note_id=389414033919)).
