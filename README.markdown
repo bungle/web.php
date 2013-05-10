@@ -499,6 +499,8 @@ If you want to pass all view variables to a partial, you can do it like this:
 </html>
 ```
 
+But maybe it is easier to just `<?php include('./body.php'); ?>.
+
 ### Pagelets
 
 TBD (see: [Facebook's BigPipe](https://www.facebook.com/note.php?note_id=389414033919)).
