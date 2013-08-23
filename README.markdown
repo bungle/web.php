@@ -486,6 +486,21 @@ die($view);
 </html>
 ```
 
+If you want to pass all view variables to a partial, you can do it like this:
+
+*view.php:*
+
+```html+php
+<!DOCTYPE html>
+<html>
+    <body>
+        <?= partial('./body.php', (array) this) ?>
+    </body>
+</html>
+```
+
+But maybe it is easier to just `<?php include('./body.php'); ?>`.
+
 ### Pagelets
 
 TBD (see: [Facebook's BigPipe](https://www.facebook.com/note.php?note_id=389414033919)).
@@ -499,7 +514,7 @@ Use `filter()` to filter a variable:
 ```php
 <?php
 $email = 'john@doe.net';
-echo filter($email, 'email') ? 'Valid Email' : 'Invalid Email';
+echo filter($email, 'email') !== false ? 'Valid Email' : 'Invalid Email';
 ```
 
 #### Built-in Filters and Validators
@@ -515,7 +530,7 @@ In addition to that you can validate using regular expressions:
 ```php
 <?php
 $email = 'john@doe.net';
-echo filter($email, '/^.+@.+$/') ? 'Valid Email' : 'Invalid Email'; // Outputs 'Valid Email'
+echo filter($email, '/^.+@.+$/') !== false ? 'Valid Email' : 'Invalid Email'; // Outputs 'Valid Email'
 ```
 
 But that is not all, web.php comes with these functions to aid in validation:
@@ -539,7 +554,7 @@ echo filter(
     $email,
     'email',
     choice('john@doe.net', 'john@doe.com')
-) ? 'Valid Email' : 'Invalid Email'; // Outputs 'Valid Email'
+) !== false ? 'Valid Email' : 'Invalid Email'; // Outputs 'Valid Email'
 
 $age_o = '16';
 $age_f = filter(
@@ -579,8 +594,8 @@ function true_validator($value) {
 function false_validator($value) {
     return false;
 }    
-$valid = filter('Hello', 'true_validator');                    // $valid holds true
-$valid = filter('Hello', 'true_validator', 'false_validator'); // $valid holds false
+$valid = filter('Hello', 'true_validator') === 'Hello';        // $valid holds bool(true)
+$valid = filter('Hello', 'true_validator', 'false_validator'); // $valid holds bool(false)
 ```
 
 You can also mix modifying filters and validating filters:
@@ -602,7 +617,7 @@ function lessthan($number) {
 }
 
 $num = '5';
-echo filter($num, 'int', 'intval', lessthan(6)) ? "{$num} is less than 6" : "{$num} is not less than 6";
+echo filter($num, 'int', 'intval', lessthan(6)) !== false ? "{$num} is less than 6" : "{$num} is not less than 6";
 ```
 
 Note: You can also have your filter functions namespaced.
