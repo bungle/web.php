@@ -65,6 +65,7 @@ namespace log {
         };
     }
     function chromephp($log_level = LOG_DEBUG) {
+        \ChromePhp::getInstance()->addSetting(\ChromePhp::BACKTRACE_LEVEL, 4);
         return function($message, $level, $trace) use ($log_level) {
             if ($log_level < $level) return false;
             switch ($level) {

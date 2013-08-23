@@ -175,7 +175,7 @@ function rows() {
     }
     return multi(array_shift($params), $params, 'r', $filter);
 }
-function multi($query, $params = array(), $type = 'r', $filter = null) {
+function multi($query, $params = array(), $type = 'r', \Closure $filter = null) {
     $st = prepare($query, $params);
     if ($st === false) return false;
     $rs = $st->execute();
@@ -184,17 +184,31 @@ function multi($query, $params = array(), $type = 'r', $filter = null) {
         return false;
     }
     $fetch = $type === 'r' ? SQLITE3_ASSOC : SQLITE3_NUM;
-    $rows = array();
+    $results = array();
     while ($row = $rs->fetchArray($fetch)) {
-        if ($filter !== null) $row = $filter($row, $rows);
-        if ($row === null) continue;
-        if ($type === 'v') $rows[] = $row[0];
-        elseif ($type === 'p') $rows[$row[0]] = $row[1];
-        else $rows[] = $row;
+        if ($filter !== null) {
+            if ($type === 'v') {
+                $val = $row[0];
+                if ($filter($val, $results) === false) continue;
+                $results[] = $val;
+            } elseif ($type === 'p') {
+                $key = $row[0];
+                $val = $row[1];
+                if ($filter($key, $val, $results) === false) continue;
+                $results[$key] = $val;
+            } else {
+                if ($filter($row, $results) === false) continue;
+                $results[] = $row;
+            }
+        } else {
+            if ($type === 'v') $results[] = $row[0];
+            elseif ($type === 'p') $results[$row[0]] = $row[1];
+            else $results[] = $row;
+        }
     }
     $rs->finalize();
     $st->close();
-    return $rows;
+    return $results;
 }
 function insert($table, $values, &$id = false) {
     $sql = "INSERT INTO {$table} (" . implode(', ', array_keys($values)) . ') VALUES (' . substr(str_repeat(', ?', count($values)), 2) . ')';

@@ -1,4 +1,5 @@
 <?php
+// NOTE: this needs rethinking (it works, but it is not a state of the art)...
 namespace crypt;
 
 function encrypt($value, $key = null, $cipher = null, $mode = null, $block = null, $charset = 'UTF-8') {
