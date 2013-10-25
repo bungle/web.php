@@ -39,48 +39,45 @@ function connect($filename = null, $flags = SQLITE3_OPEN_READWRITE, $busyTimeout
     return $sqlite;
 }
 function tx($func, $mode = null) {
-    switch($mode) {
-        case SQLITE3_TX_DEFERRED:  $tx = exec("BEGIN DEFERRED TRANSACTION")  !== false; break;
-        case SQLITE3_TX_IMMEDIATE: $tx = exec("BEGIN IMMEDIATE TRANSACTION") !== false; break;
-        case SQLITE3_TX_EXCLUSIVE: $tx = exec("BEGIN EXCLUSIVE TRANSACTION") !== false; break;
-        default:                   $tx = exec("BEGIN TRANSACTION")           !== false; break;
+    static $lv = 0;
+    $lv++;
+    if ($lv === 1) {
+        set_error_handler(function($code, $message, $file, $line) {
+            throw new \ErrorException($message, $code, 0, $file. $line);
+        }, -1);
     }
-    if ($tx === false) return false;
-    $success = true;
-    $er_h = null;
-    $er_h = set_error_handler(function($code, $message, $file, $line, $context) use (&$er_h, &$success) {
-        $success = false;
-        \sqlite\exec('ROLLBACK TRANSACTION');
-        restore_error_handler();
-        if (is_callable($er_h)) {
-            $er_h($code, $message, $file, $line, $context);
+    try {
+        if ($lv === 1) {
+            switch($mode) {
+                case SQLITE3_TX_DEFERRED:  $tx = exec("BEGIN DEFERRED TRANSACTION")  !== false; break;
+                case SQLITE3_TX_IMMEDIATE: $tx = exec("BEGIN IMMEDIATE TRANSACTION") !== false; break;
+                case SQLITE3_TX_EXCLUSIVE: $tx = exec("BEGIN EXCLUSIVE TRANSACTION") !== false; break;
+                default:                   $tx = exec("BEGIN TRANSACTION")           !== false; break;
+            }
+            if ($tx === false) throw new \Exception('Unable to begin a transaction.');
+            $rt = $func();
+            $cm = $rt === false ? \sqlite\exec('ROLLBACK TRANSACTION') !== false
+                : \sqlite\exec('COMMIT TRANSACTION')   !== false;
+            restore_error_handler();
         } else {
-            trigger_error($message, E_USER_ERROR);
+            $tx = exec("SAVEPOINT tx{$lv}");
+            if ($tx === false) throw new \Exception('Unable to mark a savepoint.');
+            $rt = $func();
+            $cm = $rt === false ? \sqlite\exec("ROLLBACK TRANSACTION TO SAVEPOINT tx{$lv}") !== false
+                : \sqlite\exec("RELASE SAVEPOINT tx{$lv}")                  !== false;
         }
-    }, -1);
-    $ex_h = null;
-    $ex_h = set_exception_handler(function(Exception $ex) use (&$ex_h, &$success) {
-        $success = false;
-        \sqlite\exec('ROLLBACK TRANSACTION');
-        restore_exception_handler();
-        if (is_callable($ex_h)) {
-            $ex_h($ex);
+        $lv--;
+        return $cm ? $rt : false;
+    } catch (\Exception $e) {
+        if ($lv === 1) {
+            \sqlite\exec('ROLLBACK TRANSACTION');
+            restore_error_handler();
         } else {
-            throw $ex;
+            \sqlite\exec("ROLLBACK TRANSACTION TO SAVEPOINT tx{$lv}");
         }
-    });
-    $ret = $func();
-    if ($success) {
-        restore_exception_handler();
-        restore_error_handler();
+        $lv--;
+        throw($e);
     }
-    if ($ret === false) {
-        \sqlite\exec('ROLLBACK TRANSACTION');
-        return false;
-
-    }
-    $committed = \sqlite\exec('COMMIT TRANSACTION') !== false;
-    return $committed ? $ret : false;
 }
 function prepare($query, $params = array()) {
     $st = connect()->prepare($query);
