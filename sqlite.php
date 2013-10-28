@@ -64,7 +64,7 @@ function tx($func, $mode = null) {
             if ($tx === false) throw new \Exception('Unable to mark a savepoint.');
             $rt = $func();
             $cm = $rt === false ? \sqlite\exec("ROLLBACK TRANSACTION TO SAVEPOINT tx{$lv}") !== false
-                : \sqlite\exec("RELASE SAVEPOINT tx{$lv}")                  !== false;
+                : \sqlite\exec("RELEASE SAVEPOINT tx{$lv}")                  !== false;
         }
         $lv--;
         return $cm ? $rt : false;
