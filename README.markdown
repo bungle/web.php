@@ -1,4 +1,4 @@
-![web.php-logo](http://code.google.com/p/web-dot-php/logo)  
+![web.php-logo](https://web-dot-php.googlecode.com/files/logo-web-dot-php.png)  
 **web.php** is a zero configuration web development library for PHP.
 
 ## Hello World in web.php
@@ -784,7 +784,6 @@ Feel free to make a fork and change it to `while (true) { ... }` or `do { ... } 
 
 web.php is distributed with MIT License.
 
-    web.php
     Copyright (c) 2012 Aapo Talvensaari
     
     Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
