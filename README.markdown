@@ -77,7 +77,7 @@ die('404 Not Found');
 
 ## Routing
 
-`web.php` has support for routing HTTP GET, POST, PUT, and DELETE request. Routes are case-insensitive, and the trailing `/` is omitted.
+`web.php` has support for routing HTTP GET, POST, PUT, HEAD, and DELETE request. Routes are case-insensitive, and the trailing `/` is omitted.
 
 ### GET Routes
 
@@ -112,6 +112,8 @@ get('/posts', function() {
 });
 ```
 
+You may use `HTTP_X_HTTP_METHOD_OVERRIDE` HTTP header to override the HTTP method.
+
 #### Parameterized Routes
 
 Route parameters in `web.php` are parsed with `sscanf` and `vsprintf`, but we have added extra parameter `%p` which acts
@@ -140,6 +142,8 @@ get('/posts/%d', function($id) {
 
 Use `post($path, $func)` to route HTTP POST requests. See the *GET Routes* examples.
 
+You may use `HTTP_X_HTTP_METHOD_OVERRIDE` HTTP header to override the HTTP method.
+
 ### PUT Routes
 
 Use `put($path, $func)` to route HTTP PUT requests. See the *GET Routes* examples.
@@ -152,6 +156,22 @@ You can send PUT requests with POST method by sending `_method` parameter that h
 </form>
 ```
 
+Or you may use `HTTP_X_HTTP_METHOD_OVERRIDE` HTTP header to override.
+
+### HEAD Routes
+
+Use `head($path, $func)` to route HTTP PUT requests. See the *GET Routes* examples.
+
+You can send HEAD requests with POST method by sending `_method` parameter that has a value of `HEAD`:
+
+```html
+<form method="post">
+    <input type="hidden" name="_method" value="PUT">
+</form>
+```
+
+Or you may use `HTTP_X_HTTP_METHOD_OVERRIDE` HTTP header to override.
+
 ### DELETE Routes
 
 Use `delete($path, $func)` to route HTTP DELETE requests. See the *GET Routes* examples.
@@ -163,6 +183,8 @@ You can send DELETE requests with POST method by sending `_method` parameter tha
     <input type="hidden" name="_method" value="DELETE">
 </form>
 ```
+
+Or you may use `HTTP_X_HTTP_METHOD_OVERRIDE` HTTP header to override.
 
 ### Routing All Types of Requests
 
@@ -784,7 +806,7 @@ Feel free to make a fork and change it to `while (true) { ... }` or `do { ... } 
 
 web.php is distributed with MIT License.
 
-    Copyright (c) 2012 Aapo Talvensaari
+    Copyright (c) 2012 — 2015 Aapo Talvensaari
     
     Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
     documentation files (the "Software"), to deal in the Software without restriction, including without limitation
