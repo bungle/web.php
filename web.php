@@ -1,47 +1,62 @@
 <?php
 // Core Functions
-function get($path, $func, $head = true) {
-    return $_SERVER['REQUEST_METHOD'] === 'GET' || ($head && $_SERVER['REQUEST_METHOD'] === 'HEAD') ? route($path, $func) : false;
-}
-function post($path, $func) {
-    if ($_SERVER['REQUEST_METHOD'] !== 'POST') return false;
-    if (isset($_POST['_method']) && $_POST['_method'] !== 'POST') return false;
-    return route($path, $func);
-}
-function put($path, $func) {
-    return $_SERVER['REQUEST_METHOD'] === 'PUT' || (isset($_POST['_method']) && $_POST['_method'] === 'PUT') ? route($path, $func) : false;
-}
-function delete($path, $func) {
-    return $_SERVER['REQUEST_METHOD'] === 'DELETE' || (isset($_POST['_method']) && $_POST['_method'] === 'DELETE') ? route($path, $func) : false;
-}
-function route($path, $func) {
+function get($path, $func) { return route($path, $func, 'GET'); }
+function put($path, $func) { return route($path, $func, 'PUT'); }
+function post($path, $func) { return route($path, $func, 'POST'); }
+function head($path, $func) { return route($path, $func, 'HEAD'); }
+function delete($path, $func) { return route($path, $func, 'DELETE'); }
+function route($path, $func, $methods = null) {
     if ($func === false) return false;
+    static $method;
+    if ($method === null) {
+        if (isset($_POST['_method'])) {
+            $method = $_POST['_method'];
+        } elseif (isset($_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'])) {
+            $method = $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'];
+        } else {
+            $method = $_SERVER['REQUEST_METHOD'];
+        }
+    }
+    if ($methods !== null) {
+        if (is_array($methods)) {
+            if (!in_array($method, $methods)) return false;
+        } else {
+            if (strpos(strval($methods), $method) === false) return false;
+        }
+    }
     static $url;
     if ($url === null) {
         $url = parse_url($_SERVER['SCRIPT_NAME'], PHP_URL_PATH);
-        $url = trim(substr(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), strlen(substr($url, 0, strrpos($url, '/')))), '/');
+        $url = strtolower(trim(substr(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), strlen(substr($url, 0, strrpos($url, '/')))), '/'));
     }
-    $path = trim($path, '/');
+    $path = strtolower(trim($path, '/'));
     $scnf = str_replace('%p', '%[^/]', $path);
     $prnf = str_replace('%p', '%s', $path);
     $args = sscanf($url, $scnf);
-    if (substr_count($prnf, '%') !== count($args)) return false;
+    if (substr_count(str_replace('%%', '', $prnf), '%') !== count($args)) return false;
     $path = vsprintf($prnf, $args);
     if ($path !== $url) return false;
     $args = array_map(function($value) { return is_string($value) ? urldecode($value) : $value; }, $args);
-    return call($func, $args);
+    if (is_callable($func)) return call_user_func_array($func, $args);
+    if (is_object($func)) {
+        $callable = array($func, strtolower($method));
+        return is_callable($callable) ? call_user_func_array($callable, $args): $func;
+    }
+    call($func, $args);
 }
 function call($func, array $args = array()) {
+    if (is_callable($func)) return call_user_func_array($func, $args);
     if (is_string($func)) {
         if (file_exists($func)) return require $func;
         if (strpos($func, '->') > 0) {
             list($clazz, $method) = explode('->', $func, 2);
-            $func = array(new $clazz, $method);
+            if (class_exists($clazz)) {
+                $func = array(new $clazz, $method);
+                if (is_callable($func)) return call_user_func_array($func, $args);
+            }
         }
-    } elseif (is_bool($func)) {
-        return $func;
     }
-    return call_user_func_array($func, $args);
+    return $func;
 }
 function forward($name, $func = null) {
     static $routes = array();
@@ -144,7 +159,7 @@ function ajax($func = null) {
     return false;
 }
 // View
-class view {
+class view extends stdClass {
     static $globals;
     function __construct($file, $layout = null) {
         $this->file = $file;
@@ -195,15 +210,16 @@ function pagelets($id = null, $func = null) {
 // Filters
 function filter() {
     $filters = func_get_args();
-    $value = $original = array_shift($filters);
+    $value = array_shift($filters);
     $valid = true;
     foreach ($filters as $filter) {
         if ($filter === true) continue;
         if ($filter === false) return false;
+        if ($filter === 'optional' && $value === null) break;
         switch ($filter) {
-            case 'bool':  $valid = is_bool($value) || false !== filter_var($value, FILTER_VALIDATE_BOOLEAN); break;
-            case 'int':   $valid = false !== filter_var($value, FILTER_VALIDATE_INT); break;
-            case 'float': $valid = false !== filter_var($value, FILTER_VALIDATE_FLOAT); break;
+            case 'bool':  $valid = is_bool($value)  || false !== filter_var($value, FILTER_VALIDATE_BOOLEAN); break;
+            case 'int':   $valid = is_int($value)   || false !== filter_var($value, FILTER_VALIDATE_INT); break;
+            case 'float': $valid = is_float($value) || false !== filter_var($value, FILTER_VALIDATE_FLOAT); break;
             case 'ip':    $valid = false !== filter_var($value, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6); break;
             case 'ipv4':  $valid = false !== filter_var($value, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4); break;
             case 'ipv6':  $valid = false !== filter_var($value, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6); break;
@@ -287,7 +303,11 @@ function specialchars($quote = ENT_NOQUOTES, $charset = 'UTF-8', $double = true)
 }
 function slug($str, $delimiter = '-') {
     $qtd = preg_quote($delimiter);
-    $str = preg_replace('/\p{Mn}/u', '', normalizer_normalize($str, Normalizer::FORM_KD));
+    if (is_callable('normalizer_normalize')) {
+        $str = preg_replace('/\p{Mn}/u', '', normalizer_normalize($str, Normalizer::FORM_KD));
+    } else {
+        $str = preg_replace('/[^a-z]/i', $delimiter, iconv("UTF-8", "US-ASCII//TRANSLIT", $str));
+    }
     $str = preg_replace('[\W]', $delimiter, $str);
     $str = preg_replace("/[{$qtd}]{2,}/", $delimiter, $str);
     return strtolower(trim($str, $delimiter));
@@ -295,11 +315,20 @@ function slug($str, $delimiter = '-') {
 function date_from_format($format = 'Y-m-d', $timezone = null) {
     return function($value) use ($format, $timezone) {
         $date = $timezone instanceof DateTimeZone ? date_create_from_format($format, $value, $timezone) : date_create_from_format($format, $value);
-        return $date !== false ? $date : null;
+        if ($date !== false) {
+            if ($format === 'Y-m-d') {
+                $date->setTime(0, 0);
+                return $date;
+            } else {
+                return $date;
+            }
+        } else {
+            return null;
+        }
     };
 }
 // Form
-class form {
+class form extends stdClass {
     public $valid = true;
     public $fields = array();
     function __construct($args = null) {
@@ -332,7 +361,7 @@ class form {
         return $data;
     }
 }
-class field {
+class field extends stdClass {
     public $name, $value, $original, $valid;
     function __construct($name, $value = null) {
         $this->name = $name;
