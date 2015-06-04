@@ -57,14 +57,14 @@ function tx($func, $mode = null) {
             if ($tx === false) throw new \Exception('Unable to begin a transaction.');
             $rt = $func();
             $cm = $rt === false ? \sqlite\exec('ROLLBACK TRANSACTION') !== false
-                : \sqlite\exec('COMMIT TRANSACTION')   !== false;
+                                : \sqlite\exec('COMMIT TRANSACTION')   !== false;
             restore_error_handler();
         } else {
             $tx = exec("SAVEPOINT tx{$lv}");
             if ($tx === false) throw new \Exception('Unable to mark a savepoint.');
             $rt = $func();
             $cm = $rt === false ? \sqlite\exec("ROLLBACK TRANSACTION TO SAVEPOINT tx{$lv}") !== false
-                : \sqlite\exec("RELEASE SAVEPOINT tx{$lv}")                  !== false;
+                                : \sqlite\exec("RELEASE SAVEPOINT tx{$lv}")                 !== false;
         }
         $lv--;
         return $cm ? $rt : false;
@@ -303,4 +303,22 @@ function modify($query, $params, &$id = null) {
     $rs->finalize();
     $st->close();
     return $changes;
+}
+function tables($columns = false, $full = true) {
+    $tables = values('SELECT name FROM sqlite_master WHERE type = ? AND name <> ? ORDER BY name', 'table', 'sqlite_sequence');
+    if ($columns) {
+        $t = array();
+        foreach ($tables as $table) {
+            $t[$table] = columns($table, $full);
+        }
+        return $t;
+    }
+    return $tables;
+}
+function columns($table, $full = true) {
+    $columns = rows('PRAGMA table_info(' . \SQLite3::escapeString($table)  . ')');
+    if ($full) return $columns;
+    return array_map(function($column) {
+        return $column['name'];
+    }, $columns);
 }
