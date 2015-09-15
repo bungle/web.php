@@ -306,10 +306,15 @@ function slug($str, $delimiter = '-') {
     if (is_callable('normalizer_normalize')) {
         $str = preg_replace('/\p{Mn}/u', '', normalizer_normalize($str, Normalizer::FORM_KD));
     } else {
+        $str = mb_convert_encoding($str, 'UTF-8', 'UTF-8');
+        $str = preg_replace('~&([a-z]{1,2})(acute|cedil|circ|grave|lig|orn|ring|slash|th|tilde|uml);~i', '$1', htmlentities($str, ENT_QUOTES, 'UTF-8'));
         $str = preg_replace('/[^a-z]/i', $delimiter, iconv("UTF-8", "US-ASCII//TRANSLIT", $str));
     }
     $str = preg_replace('[\W]', $delimiter, $str);
-    $str = preg_replace("/[{$qtd}]{2,}/", $delimiter, $str);
+    if (mb_strlen($qtd, 'UTF-8') > 0) {
+        $str = preg_replace("/[{$qtd}]{2,}/", $delimiter, $str);
+    }
+    $str = strtolower(trim($str, $delimiter));
     return strtolower(trim($str, $delimiter));
 }
 function date_from_format($format = 'Y-m-d', $timezone = null) {
