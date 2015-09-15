@@ -314,7 +314,6 @@ function slug($str, $delimiter = '-') {
     if (mb_strlen($qtd, 'UTF-8') > 0) {
         $str = preg_replace("/[{$qtd}]{2,}/", $delimiter, $str);
     }
-    $str = strtolower(trim($str, $delimiter));
     return strtolower(trim($str, $delimiter));
 }
 function date_from_format($format = 'Y-m-d', $timezone = null) {
